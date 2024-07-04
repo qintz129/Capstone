@@ -102,7 +102,7 @@ function BuildPersona () {
             onChange={e => setMedicalCondition(e.target.value)}
             sx={{backgroundColor: "white"}}
           >
-            <MenuItem value="Medical Condition">Medical Condition</MenuItem>
+            <MenuItem value="Medical Condition">Down Syndrome</MenuItem>
             <MenuItem value="Medical Condition1">Medical Condition1</MenuItem>
             <MenuItem value="Medical Condition2">Medical Condition2</MenuItem>
           </Select>
