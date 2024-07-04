@@ -38,11 +38,11 @@ function Chat () {
     const newChat = {
       id: value.chats.length + 1,
       createDatetime: new Date(),
-      personal: value.selectedPersonal,
+      persona: value.selectedPersona,
       topic: value.selectedTopics,
       skills: value.selectedSkills,
       messages: [
-        { user: value.selectedPersonal, content: ["Here are the top10 questions most people asked and you might fnd interesting:", "1. Can you tell us about youreducationaljourney and howyou became a school assistant?", "2. What are some accommodations or supports that helped you succeed in school?", "3. How do you think schools can better assist students with Down syndrome in theirlearning?", "4. Question 4", "5. Question 5", "6. Question 6", "7. Question 7"], datetime: new Date() }
+        { user: value.selectedPersona, content: ["Here are the top10 questions most people asked and you might fnd interesting:", "1. Can you tell us about youreducationaljourney and howyou became a school assistant?", "2. What are some accommodations or supports that helped you succeed in school?", "3. How do you think schools can better assist students with Down syndrome in theirlearning?", "4. Question 4", "5. Question 5", "6. Question 6", "7. Question 7"], datetime: new Date() }
       ],
       markedQuestions: []
     }
@@ -78,7 +78,7 @@ function Chat () {
 
       setTimeout(() => {
         const newMessage = {
-          user: value.selectedPersonal,
+          user: value.selectedPersona,
           content: faker.lorem.paragraph(),
           datetime: new Date(),
           new: true
@@ -105,7 +105,7 @@ function Chat () {
 
     setTimeout(() => {
       const newMessage = {
-        user: value.selectedPersonal,
+        user: value.selectedPersona,
         content: faker.lorem.paragraph(),
         datetime: new Date(),
         new: true
@@ -133,8 +133,9 @@ function Chat () {
         markedQuestions: [...value.markedQuestions, message]
       })
     }
-  }
-
+  } 
+  
+  console.log(value);
   return (
     <Box display="flex" height="100%">
       <Box p={2} sx={{backgroundColor: "#768259", width: 300}}>
@@ -199,7 +200,7 @@ function Chat () {
         <Box sx={{height: 80, backgroundColor: "#61694d"}}></Box>
         <Box display="flex" p={2} flex={1} gap={1} height="calc(100% - 80px)" boxSizing="border-box">
           <Box display="flex" flexDirection="column" position="relative" flex={1}>
-            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>Chat with {value.selectedPersonal.name} about {value.selectedTopics.title}</Box>
+            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>Chat with {value.selectedPersona.name} about {value.selectedTopics.title}</Box>
             <Box display="flex" flexDirection="column" mt={2} flex={1} mb={10} sx={{overflowY: "auto"}}>
               {
                 value.currentChat && value.currentChat.messages.map((message, index) => (
@@ -281,16 +282,16 @@ function Chat () {
             <Card>
               <CardContent>
                 <Box display="flex" justifyContent="center" my={2}>
-                  <img src={value.selectedPersonal.avatar} alt="Avatar" style={{height: 80}} />
+                  <img src={value.selectedPersona.avatar} alt="Avatar" style={{height: 80}} />
                 </Box>
                 <Box fontSize={16} color="#7d7d7d" fontWeight={400}>
-                  <Box>Name: {value.selectedPersonal.name}</Box>
-                  <Box>Age: {value.selectedPersonal.age}</Box>
-                  <Box>Gender: {value.selectedPersonal.gender}</Box>
-                  <Box>Occupation: {value.selectedPersonal.occupation}</Box>
-                  <Box>Diagnosis: {value.selectedPersonal.diagnosis}</Box>
-                  <Box>Hobbies: {value.selectedPersonal.hobbies}</Box>
-                  <Box mt={3}>{value.selectedPersonal.desc}</Box>
+                  <Box>Name: {value.selectedPersona.name}</Box>
+                  <Box>Age: {value.selectedPersona.age}</Box>
+                  <Box>Gender: {value.selectedPersona.gender}</Box>
+                  <Box>Occupation: {value.selectedPersona.occupation}</Box>
+                  <Box>Diagnosis: {value.selectedPersona.diagnosis}</Box>
+                  <Box>Hobbies: {value.selectedPersona.hobbies}</Box>
+                  <Box mt={3}>{value.selectedPersona.desc}</Box>
                 </Box>
                 <Box mt={2}>
                   <Box fontSize={18} fontWeight={700} mb={1}>Abilities:</Box>

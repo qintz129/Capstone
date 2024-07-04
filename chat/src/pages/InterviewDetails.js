@@ -9,12 +9,12 @@ function InterviewDetails () {
 
   const { value, setValue } = useContext(ChatContext);
 
-  const matchedPersonal = [value.selectedPersonal, ...value.favoritePersonals].find(p => p.id === Number(id))
+  const matchedPersona = [value.selectedPersona, ...value.favoritePersonas].find(p => p.id === Number(id))
 
   return (
     <Box display="flex" p={5} gap={5}>
       {
-        matchedPersonal && (
+        matchedPersona && (
           <Box
             flex={1}
             sx={{
@@ -25,18 +25,18 @@ function InterviewDetails () {
             }}
           >
             <Box display="flex" justifyContent="center" my={2}>
-              <img src={matchedPersonal.avatar} alt="Avatar" style={{height: 200}} />
+              <img src={matchedPersona.avatar} alt="Avatar" style={{height: 200}} />
             </Box>
-            <Box fontSize={30} fontWeight={700} textAlign="center">{matchedPersonal.name}</Box>
+            <Box fontSize={30} fontWeight={700} textAlign="center">{matchedPersona.name}</Box>
             <Box display="flex" justifyContent="center" alignItems="center" p={2} mb={2} sx={{borderBottom: "4px solid #e1e1e1"}}>
-              <Box px={2} sx={{borderRight: "1px solid #e1e1e1"}}>{matchedPersonal.diagnosis}</Box>
-              <Box px={2}>{matchedPersonal.gender}</Box>
+              <Box px={2} sx={{borderRight: "1px solid #e1e1e1"}}>{matchedPersona.diagnosis}</Box>
+              <Box px={2}>{matchedPersona.gender}</Box>
             </Box>
             <Box fontSize={16} color="#7d7d7d" fontWeight={400}>
-              <Box display="flex" alignItems="center" gap="4px">Age: <Box fontWeight={700}>{matchedPersonal.age}</Box></Box>
-              <Box display="flex" alignItems="center" gap="4px">Occupation: <Box fontWeight={700}>{matchedPersonal.occupation}</Box></Box>
-              <Box display="flex" alignItems="center" gap="4px">Hobbies: <Box fontWeight={700}>{matchedPersonal.hobbies}</Box></Box>
-              <Box mt={3}>{matchedPersonal.desc}</Box>
+              <Box display="flex" alignItems="center" gap="4px">Age: <Box fontWeight={700}>{matchedPersona.age}</Box></Box>
+              <Box display="flex" alignItems="center" gap="4px">Occupation: <Box fontWeight={700}>{matchedPersona.occupation}</Box></Box>
+              <Box display="flex" alignItems="center" gap="4px">Hobbies: <Box fontWeight={700}>{matchedPersona.hobbies}</Box></Box>
+              <Box mt={3}>{matchedPersona.desc}</Box>
             </Box>
           </Box>
         )
