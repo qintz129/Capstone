@@ -49,7 +49,7 @@ const router = createBrowserRouter([
 
 function App() {
   const [value, setValue] = useState({
-    personals: [
+    personas: [
       {
         id: 1,
         avatar: Avatar37,
@@ -74,7 +74,7 @@ function App() {
       },
     ],
     chats: [],
-    favoritePersonals: [],
+    favoritePersonas: [],
     markedQuestions: []
   })
 
