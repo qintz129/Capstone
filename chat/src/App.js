@@ -13,6 +13,7 @@ import SavedPersona from './pages/SavedPersona';
 import InterviewDetails from './pages/InterviewDetails';
 import Avatar06 from './assets/images/avatar06.png';
 import Avatar37 from './assets/images/avatar37.png';
+import PersonaPic from './assets/images/persona.png';
 
 export const ChatContext = createContext(null);
 
@@ -83,6 +84,7 @@ function App() {
       <ChatContext.Provider value={{ value, setValue }}>
         <RouterProvider router={router} />
       </ChatContext.Provider>
+      
     </div>
   );
 }

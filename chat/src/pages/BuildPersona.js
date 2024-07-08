@@ -10,10 +10,13 @@ import { ChatContext } from '../App';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from "react-router-dom";
 
+
+
 function BuildPersona () {
   const [age, setAge] = useState("")
   const [occupation, setOccupation] = useState("")
   const [medicalCondition, setMedicalCondition] = useState("")
+  const [personaCreated, setPersonaCreated] = useState(false)
 
   const { value, setValue } = useContext(ChatContext);
   const navigate = useNavigate();
@@ -22,6 +25,7 @@ function BuildPersona () {
     setAge("")
     setOccupation("")
     setMedicalCondition("")
+    setPersonaCreated(false)
   }
 
   const selectPersona = (persona) => {
@@ -39,14 +43,15 @@ function BuildPersona () {
         id: value.personas.length + 1,
         avatar: faker.image.avatar(),
         name: faker.person.fullName(),
-        age: 27,
+        age: age,
         gender: faker.helpers.arrayElement(['Female', 'Male']),
-        occupation: faker.person.jobTitle(),
-        diagnosis: faker.word.words(2),
+        occupation: occupation,
+        diagnosis: medicalCondition,
         hobbies: ["Reading Clubs", "Baking"],
         desc: faker.lorem.lines(4)
       }]
-    })
+    });
+    setPersonaCreated(true);
   }
 
   const favoritePersona = (persona) => {
@@ -113,7 +118,7 @@ function BuildPersona () {
         </Box>
       </Box>
       <Box flex={1} overflow="hidden">
-        <Swiper
+      {personaCreated ? (<Swiper
           effect={'cards'}
           grabCursor={true}
           modules={[EffectCards]}
@@ -159,6 +164,13 @@ function BuildPersona () {
             ))
           }
         </Swiper>
+        ) : (
+          <Box style={{justifyContent: 'center', alignItems: 'center', height: '100%', width:'80%',fontSize: '20px', color: '#666'}}>
+            <p>Welcome to our platform where you can customize and interact with your own persona. Dive deep into understanding the real-life experiences of target groups and engage with your personalized digital persona. </p>
+            <p>Create your persona to begin the journey!</p>
+          </Box>
+        )}
+        
       </Box>
     </Box>
   )
