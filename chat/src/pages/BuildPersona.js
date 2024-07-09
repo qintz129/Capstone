@@ -9,13 +9,14 @@ import { useState, useContext } from 'react';
 import { ChatContext } from '../App';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from "react-router-dom";
-
-
+import MaleAvatar from "../assets/images/avatar06.png";
+import FemaleAvatar from "../assets/images/avatar37.png";
 
 function BuildPersona () {
   const [age, setAge] = useState("")
   const [occupation, setOccupation] = useState("")
   const [medicalCondition, setMedicalCondition] = useState("")
+  const [theme, setTheme] = useState("")
   const [personaCreated, setPersonaCreated] = useState(false)
 
   const { value, setValue } = useContext(ChatContext);
@@ -25,6 +26,7 @@ function BuildPersona () {
     setAge("")
     setOccupation("")
     setMedicalCondition("")
+    setTheme("")
     setPersonaCreated(false)
   }
 
@@ -37,21 +39,29 @@ function BuildPersona () {
   }
 
   const createPersona = () => {
+    const gender = faker.helpers.arrayElement(['Female', 'Male']); 
+    const avatar = gender === 'Male' ? MaleAvatar : FemaleAvatar;
+
+    const newPersona = {
+      id: value.personas.length + 1,
+      theme: theme,
+      name: faker.person.fullName(),
+      age: age,
+      gender: gender,
+      avatar: avatar,
+      occupation: occupation,
+      diagnosis: medicalCondition,
+      hobbies: ["Reading Clubs", "Baking"],
+      desc: faker.lorem.lines(4)
+    };
+    
     setValue({
       ...value,
-      personas: [...value.personas, {
-        id: value.personas.length + 1,
-        avatar: faker.image.avatar(),
-        name: faker.person.fullName(),
-        age: age,
-        gender: faker.helpers.arrayElement(['Female', 'Male']),
-        occupation: occupation,
-        diagnosis: medicalCondition,
-        hobbies: ["Reading Clubs", "Baking"],
-        desc: faker.lorem.lines(4)
-      }]
+      personas: [newPersona, ...value.personas]
     });
+
     setPersonaCreated(true);
+    
   }
 
   const favoritePersona = (persona) => {
@@ -71,12 +81,12 @@ function BuildPersona () {
     <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10}>
       <Box flex={1}>
         <h2 style={{fontSize: 40}}>Build Your Persona</h2>
-        <p>Fill in the details to create your personaized persona</p>
+        <p>Fill in the details to create your personalized persona</p>
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Age</Box>
           <TextField
             fullWidth
-            placeholder="Enter the age for your persona"
+            placeholder="Enter the age for your persona(1-100)"
             variant="outlined"
             size="small"
             sx={{backgroundColor: "white"}}
@@ -92,13 +102,15 @@ function BuildPersona () {
               onChange={e => setOccupation(e.target.value)}
               sx={{backgroundColor: "white"}}
             >
+              <MenuItem value="Student">Student</MenuItem>
+              <MenuItem value="Artist">Artist</MenuItem>
+              <MenuItem value="Barista">Barista</MenuItem>
               <MenuItem value="School Assistant">School Assistant</MenuItem>
-              <MenuItem value="School Assistant1">School Assistant1</MenuItem>
-              <MenuItem value="School Assistant2">School Assistant2</MenuItem>
+              <MenuItem value="Shop Assistant">Shop Assistant</MenuItem>
             </Select>
           </FormControl>
         </Box>
-        <Box mb={12}>
+        <Box mb={3}>
           <Box mb={1} fontWeight={500}>Medical Condition</Box>
           <Select
             fullWidth
@@ -107,9 +119,21 @@ function BuildPersona () {
             onChange={e => setMedicalCondition(e.target.value)}
             sx={{backgroundColor: "white"}}
           >
-            <MenuItem value="Medical Condition">Down Syndrome</MenuItem>
-            <MenuItem value="Medical Condition1">Medical Condition1</MenuItem>
-            <MenuItem value="Medical Condition2">Medical Condition2</MenuItem>
+            <MenuItem value="Down Syndrome">Down Syndrome</MenuItem>
+          </Select>
+        </Box>
+        <Box mb={12}>
+          <Box mb={1} fontWeight={500}>Theme</Box>
+          <Select
+            fullWidth
+            size="small"
+            value={theme}
+            onChange={e => setTheme(e.target.value)}
+            sx={{backgroundColor: "white"}}
+          >
+            <MenuItem value="Employment">Employment</MenuItem>
+            <MenuItem value="Education">Education</MenuItem>
+            <MenuItem value="Family">Family</MenuItem>
           </Select>
         </Box>
         <Box display="flex" gap={1}>
@@ -152,12 +176,12 @@ function BuildPersona () {
                   <Box>Age: {persona.age}</Box>
                   <Box>Gender: {persona.gender}</Box>
                   <Box>Occupation: {persona.occupation}</Box>
-                  <Box>Diagnosis: {persona.diagnosis}</Box>
-                  <Box>Hobbies: {persona.hobbies}</Box>
+                  <Box>Medical Condition: {persona.diagnosis}</Box>
+                  <Box>Theme:{persona.theme}</Box>
                   <Box mt={3}>{persona.desc}</Box>
                 </Box>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                  <Button color="secondary" onClick={() => selectPersona(persona)}>Select</Button>
+                  <Button color="secondary" onClick={() => selectPersona(persona)}>SELECT AND Next</Button>
                   <FavoriteIcon onClick={() => favoritePersona(persona)} sx={{color: value.favoritePersonas.find(p => p.id === persona.id) ? "red" : "black"}} />
                 </Box>
               </SwiperSlide>
@@ -169,8 +193,7 @@ function BuildPersona () {
             <p>Welcome to our platform where you can customize and interact with your own persona. Dive deep into understanding the real-life experiences of target groups and engage with your personalized digital persona. </p>
             <p>Create your persona to begin the journey!</p>
           </Box>
-        )}
-        
+          )}
       </Box>
     </Box>
   )
