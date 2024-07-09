@@ -60,7 +60,7 @@ function Chat () {
   useEffect(() => {
     addChat();
   }, [])
-
+  // Guarantee the latest message is always visible
   useEffect(() => {
     scrollToBottom()
   }, [value.currentChat && value.currentChat.messages.length, messagesEndRef.current]);
@@ -135,7 +135,36 @@ function Chat () {
     }
   } 
   
-  console.log(value);
+  const useTypewriter = (text, speed = 50) => {
+    const [displayText, setDisplayText] = useState('');
+  
+    useEffect(() => {
+      let i = 0; 
+      // Timer
+      const typingInterval = setInterval(() => { 
+        // Callback function
+        if (i < text.length) { 
+          setDisplayText(prevText => prevText + text.charAt(i));
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, speed);
+
+      return () => {
+        clearInterval(typingInterval);
+      };
+    }, [text, speed]);
+
+  return displayText;
+};
+  
+  const Typewriter = ({ text, speed = 20 }) => {
+    const displayText = useTypewriter(text, speed);
+  
+    return <p>{displayText}</p>;
+  }; 
+
   return (
     <Box display="flex" height="100%">
       <Box p={2} sx={{backgroundColor: "#768259", width: 300}}>
@@ -357,33 +386,5 @@ function Chat () {
     </Box>
   )
 }
-
-const useTypewriter = (text, speed = 50) => {
-  const [displayText, setDisplayText] = useState('');
-
-  useEffect(() => {
-    let i = 0;
-    const typingInterval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText(prevText => prevText + text.charAt(i));
-        i++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, speed);
-
-    return () => {
-      clearInterval(typingInterval);
-    };
-  }, [text, speed]);
-
-  return displayText;
-};
-
-const Typewriter = ({ text, speed = 20 }) => {
-  const displayText = useTypewriter(text, speed);
-
-  return <p>{displayText}</p>;
-};
 
 export default Chat
