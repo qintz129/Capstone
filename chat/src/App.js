@@ -50,28 +50,28 @@ const router = createBrowserRouter([
 function App() {
   const [value, setValue] = useState({
     personas: [
-      {
-        id: 1,
-        avatar: Avatar37,
-        name: "Amy",
-        age: 25,
-        gender: "Female",
-        occupation: "School Assistant",
-        diagnosis: "Down Syndrome",
-        hobbies: ["Reading Clubs", "Baking"],
-        desc: "Hello! My name is Amy, and l'm 25 years old.l workas a School Assistant, where l get to help out withlots of different tasks and spend time with amazingstudents.I have Down syndrome, but I don't let thatdefine me-l love my job, enjoy meeting new people.and am always eager to learn new things.l'm happyto share more about my experiences and learn aboutyours too!"
-      },
-      {
-        id: 2,
-        avatar: Avatar06,
-        name: "Bob",
-        age: 27,
-        gender: "Male",
-        occupation: "School Assistant",
-        diagnosis: "Down Syndrome",
-        hobbies: ["Reading Clubs", "Baking"],
-        desc: "Hello! My name is Bob, ....."
-      },
+      // {
+      //   id: 1,
+      //   avatar: Avatar37,
+      //   name: "Amy",
+      //   age: 25,
+      //   gender: "Female",
+      //   occupation: "School Assistant",
+      //   diagnosis: "Down Syndrome",
+      //   hobbies: ["Reading Clubs", "Baking"],
+      //   desc: "Hello! My name is Amy, and l'm 25 years old.l workas a School Assistant, where l get to help out withlots of different tasks and spend time with amazingstudents.I have Down syndrome, but I don't let thatdefine me-l love my job, enjoy meeting new people.and am always eager to learn new things.l'm happyto share more about my experiences and learn aboutyours too!"
+      // },
+      // {
+      //   id: 2,
+      //   avatar: Avatar06,
+      //   name: "Bob",
+      //   age: 27,
+      //   gender: "Male",
+      //   occupation: "School Assistant",
+      //   diagnosis: "Down Syndrome",
+      //   hobbies: ["Reading Clubs", "Baking"],
+      //   desc: "Hello! My name is Bob, ....."
+      // },
     ],
     chats: [],
     favoritePersonas: [],
