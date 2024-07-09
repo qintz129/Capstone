@@ -200,7 +200,7 @@ function Chat () {
         <Box sx={{height: 80, backgroundColor: "#61694d"}}></Box>
         <Box display="flex" p={2} flex={1} gap={1} height="calc(100% - 80px)" boxSizing="border-box">
           <Box display="flex" flexDirection="column" position="relative" flex={1}>
-            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>Chat with {value.selectedPersona.name} about {value.selectedTopics.title}</Box>
+            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>Chat with {value.selectedPersona.name} about {value.selectedPersona?.theme}</Box>
             <Box display="flex" flexDirection="column" mt={2} flex={1} mb={10} sx={{overflowY: "auto"}}>
               {
                 value.currentChat && value.currentChat.messages.map((message, index) => (
