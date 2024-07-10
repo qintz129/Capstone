@@ -33,7 +33,7 @@ function BuildPersona () {
       ...value,
       selectedPersona: persona
     })
-    navigate("/featured-abilities")
+    navigate("/your-topic")
   }
 
   const createPersona = () => {
