@@ -11,7 +11,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { faker } from '@faker-js/faker';
 import EmploymentImage from "../assets/images/employment1.jpg";
 import EducationImage from "../assets/images/education.jpg";
-import FamilyImage from "../assets/images/family.jpg";
+import FamilyImage from "../assets/images/family.jpg"; 
+import Tooltip from '@mui/material/Tooltip';
 
 
 function YourTopic () {
@@ -21,14 +22,60 @@ function YourTopic () {
 
   const skillsByTheme = {
     Education: [
-      { id: 1, title: "Willingness to Learn", desc: faker.lorem.lines(4), drivers: ['self-motivation', 'curiosity'], blockers: ['lack of encouragement', 'rigid teaching methods'] },
+      { id: 1, title: "Willingness to Learn", desc: faker.lorem.lines(4),  
+        drivers: [ 
+          { name: 'self-motivation', desc: faker.lorem.lines(4) },
+          { name: 'curiosity', desc: faker.lorem.lines(4) },
+        ],  
+        blockers: ['lack of encouragement', 'rigid teaching methods']  
+      },
       { id: 2, title: "Artistic/Athletic Skills", desc: faker.lorem.lines(4), drivers: ['creative environments', 'physical activity'], blockers: ['limited resources', 'inadequate support'] },
-      { id: 3, title: "Persistence", desc: faker.lorem.lines(4), drivers: ['goal setting', 'mentor support'], blockers: ['frequent failures', 'lack of resilience training'] },
+      { id: 3, title: "Persistence", desc: faker.lorem.lines(4), drivers: ['goal setting', 'mentor support'], blockers: ['frequent failures', 'lack of resilience training'] }, 
     ],
     Employment: [
-      { id: 1, title: "Memory Skills", desc: faker.lorem.lines(4),drivers: ['repetition', 'visual and auditory aids'], blockers: ['complex information', 'disorganization'] },
-      { id: 2, title: "Teamwork", desc: faker.lorem.lines(4),drivers: ['collaborative culture', 'communication skills training'], blockers: ['competitive environments', 'poor leadership'] },
-      { id: 3, title: "Willingness to Learn",desc: faker.lorem.lines(4), drivers: ['Continuous learning opportunities', 'positive reinforcement'], blockers: ['discouraging feedback', 'stressful conditions'] },
+      { id: 1, title: "Memory Skills", desc: faker.lorem.lines(4), 
+        drivers:  
+        [ 
+          { name: 'repetition', desc: faker.lorem.lines(4) },
+          { name: 'visual and auditory aids', desc: faker.lorem.lines(4) },
+        ],  
+        blockers:  
+        [ 
+          { name:'complex information', desc: faker.lorem.lines(4) },
+          { name: 'disorganization' , desc: faker.lorem.lines(4) },
+        ]  
+      },
+      { id: 2, title: "Teamwork", desc: faker.lorem.lines(4), 
+        drivers: [ 
+          { name: 'collaborative culture', desc: faker.lorem.lines(4) },
+          { name: 'communication skills training', desc: faker.lorem.lines(4) },
+        ],  
+        blockers: [ 
+          { name: 'competitive environments', desc: faker.lorem.lines(4) },
+          { name: 'poor leadership', desc: faker.lorem.lines(4) },
+        ] },
+      { id: 3, title: "Willingness to Learn",desc: faker.lorem.lines(4),  
+        drivers:  
+        [ 
+          { name: 'Continuous learning opportunities', desc: faker.lorem.lines(4) },
+          { name: 'positive reinforcement' , desc: faker.lorem.lines(4) },
+        ],  
+        blockers:  
+        [ 
+          { name: 'discouraging feedback', desc: faker.lorem.lines(4) },
+          { name: 'stressful conditions', desc: faker.lorem.lines(4) },
+        ] }, 
+      { id: 4, title: "Self-Advocacy", desc: faker.lorem.lines(4), 
+         drivers:  
+        [ 
+          { name: 'driver-1', desc: faker.lorem.lines(4) },
+          { name: 'driver-2', desc: faker.lorem.lines(4) }, 
+        ], 
+         blockers:  
+         [ 
+          { name: 'blocker-1', desc: faker.lorem.lines(4) },
+          { name: 'blocker-2', desc: faker.lorem.lines(4) },
+        ] },
     ],
     Family: [
       { id: 1, title: "Empathy and Kindness",desc: faker.lorem.lines(4), drivers: ['supportive family dynamics', 'emotional intelligence education'], blockers: ['Negative family dynamics','conflict and isolation'] },
@@ -52,10 +99,10 @@ function YourTopic () {
   }
 
   return (
-    <Box textAlign="center" py={5} px={15}>
+    <Box textAlign="center" py={2} px={3}>
       <Box fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
       <Box fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
-      <Box sx={{backgroundColor: "#fff"}} px={10}>
+      <Box sx={{backgroundColor: "#fff"}} px={5}>
         <Box display="flex" alignItems="center" gap={2} p={2}>
           <Box
             sx={{
@@ -86,57 +133,95 @@ function YourTopic () {
         </Box>
         <Swiper
           slidesPerView={3}
-          spaceBetween={30}
+          spaceBetween={45}
           navigation={true}
           modules={[Navigation]}
-          className="mySwiper3"
+          className="mySwiper3" 
+          style={{paddingLeft: 45, paddingRight: 45}}
         >
           {
             skills.map(skill => (
-              <SwiperSlide key={skill.id}>
+              <SwiperSlide  
+                key={skill.id} 
+                >  
                 <Box fontSize={24} fontWeight={600} marginTop={3}>{skill.title}</Box>
                 <Box fontSize={14} fontWeight={300} height={100} marginTop={3} marginBottom={2}>{skill.desc}</Box>
                 <Box textAlign="left" flex={1} p={2} pb={0}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography>Explore Ability Drivers and Ability Blockers</Typography>
+                  <Typography fontWeight={600}>Explore Ability Drivers and Ability Blockers</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                 <Box bgcolor="white" p={2} borderRadius={2} height={200} overflow="auto">
                   <Box mb={2}>
                   <Typography variant="subtitle1" fontWeight={600}>Ability drivers:</Typography>
                   <ul>
-                    {skill.drivers.map(driver => <li key={driver}>{driver}</li>)}
+                    {skill.drivers.map(driver => (
+                      <Tooltip
+                      key={driver.name}
+                      title={driver.desc}
+                      placement="top"
+                      PopperProps={{
+                        sx: {
+                          '& .MuiTooltip-tooltip': {
+                            fontSize: '1.1rem', 
+                          }
+                        }
+                      }}
+                    >
+                      <li
+                      style={{
+                        cursor: 'pointer',
+                        marginBottom: '10px',
+                        backgroundColor: 'transparent' 
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}  
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'} 
+                    >
+                      {driver.name}
+                    </li>
+                      </Tooltip>
+                    ))}
                   </ul>
                   </Box>
                   <Box>
                     <Typography variant="subtitle1" fontWeight={600}>Ability blockers:</Typography>
                     <ul>
-                      {skill.blockers.map(blocker => <li key={blocker}>{blocker}</li>)}
+                      {skill.blockers.map(blocker => (
+                        <Tooltip
+                        key={blocker.name}
+                        title={blocker.desc}
+                        placement="top"
+                        PopperProps={{
+                          sx: {
+                            '& .MuiTooltip-tooltip': {
+                              fontSize: '1.1rem', 
+                            }
+                          }
+                        }}
+                      >
+                        <li
+                        style={{
+                          cursor: 'pointer',
+                          marginBottom: '10px',
+                          backgroundColor: 'transparent' 
+                        }}
+                        onMouseEnter={(e) => e.target.style.backgroundColor = '#f0f0f0'}  
+                        onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'} 
+                      >
+                        {blocker.name}
+                      </li>
+                        </Tooltip>
+                      ))}
                     </ul>
                   </Box>
                 </Box>
                 </AccordionDetails>
                 </Accordion>
                 </Box>
-                  {/* <Box>Ability drivers:</Box>
-                  <ul>
-                    {
-                      skill.drivers.map(driver => <li key={driver}>{driver}</li>)
-                    }
-                  </ul>
-                  <Box textAlign="left">Ability blockers:</Box>
-                  <ul>
-                    {
-                      skill.blockers.map(blocker => <li key={blocker}>{blocker}</li>)
-                    }
-                  </ul>
-                </Box> */}
-                {
                   <Box p={2} pt={0} display="flex" justifyContent="flex-start" alignItems="center">
                     <Button startIcon={ <AddIcon />} disabled={selectedSkills.includes(skill)} color="secondary" onClick={() => setSelectedSkills([...selectedSkills, skill])}>Select</Button>
-                  </Box>
-                }
+                  </Box> 
               </SwiperSlide>
 
             ))

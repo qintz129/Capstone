@@ -89,11 +89,24 @@ html, body {
 }
 
 .swiper.mySwiper3 {
-    padding: 20px 0;
-}
+    padding: 20px 0; 
+} 
 
 .mySwiper3 .swiper-slide {
     background-color: #f1f1cf;
-    border-radius: 10px;
-}
+    border-radius: 10px;  
+} 
 
+.swiper-button-next:after, .swiper-button-prev:after {
+    color: grey;  
+  }   
+
+.listItem { 
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s ease; /* 平滑背景色变化 */
+} 
+
+.listItem:hover { 
+    background-color: gray;
+}
