@@ -24,7 +24,6 @@ function SavedPersona () {
                   <Box>Gender: {persona.gender}</Box>
                   <Box>Occupation: {persona.occupation}</Box>
                   <Box>Diagnosis: {persona.diagnosis}</Box>
-                  <Box>Hobbies: {persona.hobbies}</Box>
                   <Box mt={3}>{persona.desc}</Box>
                 </Box>
               </CardContent>

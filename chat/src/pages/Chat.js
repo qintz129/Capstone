@@ -319,7 +319,6 @@ function Chat () {
                   <Box>Gender: {value.selectedPersona.gender}</Box>
                   <Box>Occupation: {value.selectedPersona.occupation}</Box>
                   <Box>Diagnosis: {value.selectedPersona.diagnosis}</Box>
-                  <Box>Hobbies: {value.selectedPersona.hobbies}</Box>
                   <Box mt={3}>{value.selectedPersona.desc}</Box>
                 </Box>
                 <Box mt={2}>
