@@ -19,14 +19,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <BuildPersona />,
   },
-  {
-    path: "/featured-abilities",
-    element: <FeaturedAbilities />
-  },
-  {
-    path: "/choose-topics",
-    element: <ChooseTopics />
-  },
+  // {
+  //   path: "/featured-abilities",
+  //   element: <FeaturedAbilities />
+  // },
+  // {
+  //   path: "/choose-topics",
+  //   element: <ChooseTopics />
+  // },
   {
     path: "/your-topic",
     element: <YourTopic />

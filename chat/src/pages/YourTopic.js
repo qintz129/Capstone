@@ -6,19 +6,20 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import Face6Icon from '@mui/icons-material/Face6';
 import AddIcon from '@mui/icons-material/Add';
-import FemaleAvatar from "../assets/images/avatar37.png";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { faker } from '@faker-js/faker';
-import EmploymentImage from "../assets/images/employment1.jpg";
+import EmploymentImage from "../assets/images/employment.jpg";
 import EducationImage from "../assets/images/education.jpg";
 import FamilyImage from "../assets/images/family.jpg"; 
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from '@mui/material/Tooltip'; 
+import RemoveIcon from '@mui/icons-material/Remove';
 
 
 function YourTopic () {
-  const navigate = useNavigate();
-  const [selectedSkills, setSelectedSkills] = useState([])
-  const { value, setValue } = useContext(ChatContext);
+  const navigate = useNavigate(); 
+  const { value, setValue } = useContext(ChatContext); 
+  const [selectedSkills, setSelectedSkills] = useState(value.selectedSkills || [])
+ 
 
   const skillsByTheme = {
     Education: [
@@ -84,7 +85,15 @@ function YourTopic () {
     ]
   };
 
-  const skills = skillsByTheme[value.selectedPersona?.theme] || [];
+  const skills = skillsByTheme[value.selectedPersona?.theme] || []; 
+
+  const toggleSkillSelection = (skill) => {
+    if (selectedSkills.some(s => s.id === skill.id)) {
+      setSelectedSkills(selectedSkills.filter(s => s.id !== skill.id));
+    } else {
+      setSelectedSkills([...selectedSkills, skill]);
+    }
+  }; 
 
 
   const handleNext = () => {
@@ -96,7 +105,9 @@ function YourTopic () {
       })
       navigate("/chat")
     }
-  }
+  } 
+
+  console.log(selectedSkills)
 
   return (
     <Box textAlign="center" py={2} px={3}>
@@ -220,7 +231,13 @@ function YourTopic () {
                 </Accordion>
                 </Box>
                   <Box p={2} pt={0} display="flex" justifyContent="flex-start" alignItems="center">
-                    <Button startIcon={ <AddIcon />} disabled={selectedSkills.includes(skill)} color="secondary" onClick={() => setSelectedSkills([...selectedSkills, skill])}>Select</Button>
+                    <Button
+                    startIcon={selectedSkills.some(s => s.id === skill.id)  ? <RemoveIcon /> : <AddIcon />}
+                    color="secondary"
+                    onClick={() => toggleSkillSelection(skill)}
+                  >
+                    {selectedSkills.some(s => s.id === skill.id)  ? 'Unselect' : 'Select'}
+                  </Button>
                   </Box> 
               </SwiperSlide>
 
@@ -228,7 +245,7 @@ function YourTopic () {
           }
         </Swiper>
       </Box>
-      <Box display="flex" gap={2} justifyContent="center" mt={10}>
+      <Box display="flex" gap={2} justifyContent="center" mt={5}>
         <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={() => navigate(-1)}>Back</Button>
         <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained" onClick={handleNext}>Next</Button>
       </Box>
