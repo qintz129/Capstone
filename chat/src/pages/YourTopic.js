@@ -28,10 +28,30 @@ function YourTopic () {
           { name: 'self-motivation', desc: faker.lorem.lines(4) },
           { name: 'curiosity', desc: faker.lorem.lines(4) },
         ],  
-        blockers: ['lack of encouragement', 'rigid teaching methods']  
+        blockers: [ 
+          { name: 'lack of encouragement', desc: faker.lorem.lines(4) },
+          { name: 'rigid teaching methods', desc: faker.lorem.lines(4) },
+        ]  
       },
-      { id: 2, title: "Artistic/Athletic Skills", desc: faker.lorem.lines(4), drivers: ['creative environments', 'physical activity'], blockers: ['limited resources', 'inadequate support'] },
-      { id: 3, title: "Persistence", desc: faker.lorem.lines(4), drivers: ['goal setting', 'mentor support'], blockers: ['frequent failures', 'lack of resilience training'] }, 
+      { id: 2, title: "Artistic/Athletic Skills", desc: faker.lorem.lines(4),  
+        drivers: [ 
+          { name: 'creative environments', desc: faker.lorem.lines(4) },
+          { name: 'physical activity', desc: faker.lorem.lines(4) },
+        ],  
+        blockers: [ 
+          { name: 'limited resources', desc: faker.lorem.lines(4) },
+          { name: 'inadequate support', desc: faker.lorem.lines(4) },
+        ] },
+      { id: 3, title: "Persistence", desc: faker.lorem.lines(4),  
+        drivers: [ 
+           { name: 'goal setting', desc: faker.lorem.lines(4) },
+           { name: 'mentor support', desc: faker.lorem.lines(4) },
+          ], 
+         blockers: [ 
+          { name: 'frequent failures', desc: faker.lorem.lines(4) },
+          { name: 'lack of resilience training', desc: faker.lorem.lines(4) },
+        ]  
+        }, 
     ],
     Employment: [
       { id: 1, title: "Memory Skills", desc: faker.lorem.lines(4), 
@@ -79,9 +99,33 @@ function YourTopic () {
         ] },
     ],
     Family: [
-      { id: 1, title: "Empathy and Kindness",desc: faker.lorem.lines(4), drivers: ['supportive family dynamics', 'emotional intelligence education'], blockers: ['Negative family dynamics','conflict and isolation'] },
-      { id: 2, title: "Family Communication", desc: faker.lorem.lines(4),drivers: ['use of clear and simple language', 'family meetings'], blockers: ['misunderstandings', 'lack of time together'] },
-      { id: 3, title: "Positive Attitude", desc: faker.lorem.lines(4), drivers: ['optimistic family outlook', 'celebrations of small achievements'], blockers: ['constant negativity or stress', 'unresolved family conflicts'] },
+      { id: 1, title: "Empathy and Kindness",desc: faker.lorem.lines(4),  
+        drivers: 
+         [ 
+          { name: 'supportive family dynamics', desc: faker.lorem.lines(4) },
+          { name: 'emotional intelligence education', desc: faker.lorem.lines(4) },
+        ],  
+        blockers:  
+        [ 
+          { name: 'Negative family dynamics', desc: faker.lorem.lines(4) },
+          { name: 'conflict and isolation', desc: faker.lorem.lines(4) },
+        ] },
+      { id: 2, title: "Family Communication", desc: faker.lorem.lines(4), 
+        drivers: [ 
+          { name: 'use of clear and simple language', desc: faker.lorem.lines(4) },
+          { name: 'family meetings' , desc: faker.lorem.lines(4) },
+        ], blockers: [ 
+          { name: 'misunderstandings', desc: faker.lorem.lines(4) },
+          { name: 'lack of time together' , desc: faker.lorem.lines(4) },
+        ] },
+      { id: 3, title: "Positive Attitude", desc: faker.lorem.lines(4),  
+        drivers: [ 
+          { name: 'optimistic family outlook', desc: faker.lorem.lines(4) },
+          { name: 'celebrations of small achievements'  , desc: faker.lorem.lines(4) },
+        ], blockers: [ 
+          { name: 'constant negativity or stress', desc: faker.lorem.lines(4) },
+          { name: 'unresolved family conflicts'  , desc: faker.lorem.lines(4) },
+        ] },
     ]
   };
 
