@@ -140,8 +140,7 @@ function YourTopic () {
   }; 
 
 
-  const handleNext = () => {
-    
+  const handleNext = () => { 
     if (selectedSkills.length > 0) {
       setValue({
         ...value,
@@ -291,7 +290,18 @@ function YourTopic () {
       </Box>
       <Box display="flex" gap={2} justifyContent="center" mt={5}>
         <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={() => navigate(-1)}>Back</Button>
-        <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained" onClick={handleNext}>Next</Button>
+        <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained"  
+            onClick={() => { 
+                if (selectedSkills.length > 0) {
+                  if (window.confirm("Are you sure you want to select these abilities for inclusion in LLM interactions and proceed to the next step? This will enhance the relevance of future responses.")) {
+                     handleNext();
+                  } else {
+                 console.log("Selection cancelled.");
+               }  
+              } else { 
+                handleNext();
+              }
+              }}>Next</Button>
       </Box>
     </Box>
   )
