@@ -11,8 +11,6 @@ import YourTopic from './pages/YourTopic';
 import Chat from './pages/Chat';
 import SavedPersona from './pages/SavedPersona';
 import InterviewDetails from './pages/InterviewDetails';
-import Avatar06 from './assets/images/avatar06.png';
-import Avatar37 from './assets/images/avatar37.png';
 
 export const ChatContext = createContext(null);
 
@@ -21,14 +19,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <BuildPersona />,
   },
-  {
-    path: "/featured-abilities",
-    element: <FeaturedAbilities />
-  },
-  {
-    path: "/choose-topics",
-    element: <ChooseTopics />
-  },
+  // {
+  //   path: "/featured-abilities",
+  //   element: <FeaturedAbilities />
+  // },
+  // {
+  //   path: "/choose-topics",
+  //   element: <ChooseTopics />
+  // },
   {
     path: "/your-topic",
     element: <YourTopic />

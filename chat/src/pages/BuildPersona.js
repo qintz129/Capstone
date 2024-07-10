@@ -16,8 +16,7 @@ function BuildPersona () {
   const [age, setAge] = useState("")
   const [occupation, setOccupation] = useState("")
   const [medicalCondition, setMedicalCondition] = useState("")
-  const [theme, setTheme] = useState("")
-  const [personaCreated, setPersonaCreated] = useState(false)
+  const [theme, setTheme] = useState("") 
 
   const { value, setValue } = useContext(ChatContext);
   const navigate = useNavigate();
@@ -27,7 +26,6 @@ function BuildPersona () {
     setOccupation("")
     setMedicalCondition("")
     setTheme("")
-    setPersonaCreated(false)
   }
 
   const selectPersona = (persona) => {
@@ -40,28 +38,28 @@ function BuildPersona () {
 
   const createPersona = () => {
     const gender = faker.helpers.arrayElement(['Female', 'Male']); 
-    const avatar = gender === 'Male' ? MaleAvatar : FemaleAvatar;
+    const avatar = gender === 'Male' ? MaleAvatar : FemaleAvatar; 
+    const ageRange = age.split('-');
+    const minAge = parseInt(ageRange[0], 10);
+    const maxAge = parseInt(ageRange[1], 10);
+    const randomAge = Math.floor(Math.random() * (maxAge - minAge + 1) + minAge);
 
     const newPersona = {
       id: value.personas.length + 1,
       theme: theme,
-      name: faker.person.fullName(),
-      age: age,
+      name: faker.person.firstName(),
+      age: randomAge,
       gender: gender,
       avatar: avatar,
       occupation: occupation,
       diagnosis: medicalCondition,
-      hobbies: ["Reading Clubs", "Baking"],
-      desc: faker.lorem.lines(4)
+      desc: faker.lorem.lines(10)
     };
     
     setValue({
       ...value,
       personas: [newPersona, ...value.personas]
-    });
-
-    setPersonaCreated(true);
-    
+    });   
   }
 
   const favoritePersona = (persona) => {
@@ -78,21 +76,23 @@ function BuildPersona () {
   }
 
   return (
-    <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10}>
+    <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10} mb={5}>
       <Box flex={1}>
         <h2 style={{fontSize: 40}}>Build Your Persona</h2>
         <p>Fill in the details to create your personalized persona</p>
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Age</Box>
-          <TextField
-            fullWidth
-            placeholder="Enter the age for your persona(1-100)"
-            variant="outlined"
-            size="small"
-            sx={{backgroundColor: "white"}}
-            age={age}
-            onChange={e => setAge(e.target.value)}
-          />
+          <FormControl fullWidth size="small">
+            <Select
+              value={age}
+              onChange={e => setAge(e.target.value)}
+              sx={{backgroundColor: "white"}}
+            >
+              <MenuItem value="10-20">10-20</MenuItem>
+              <MenuItem value="20-30">20-30</MenuItem>
+              <MenuItem value="30-40">30-40</MenuItem>
+            </Select>
+          </FormControl>
         </Box>
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Occupation</Box>
@@ -106,7 +106,7 @@ function BuildPersona () {
               <MenuItem value="Artist">Artist</MenuItem>
               <MenuItem value="Barista">Barista</MenuItem>
               <MenuItem value="School Assistant">School Assistant</MenuItem>
-              <MenuItem value="Shop Assistant">Shop Assistant</MenuItem>
+              <MenuItem value="Shop Assistant">Shop Assistant</MenuItem> 
             </Select>
           </FormControl>
         </Box>
@@ -122,7 +122,7 @@ function BuildPersona () {
             <MenuItem value="Down Syndrome">Down Syndrome</MenuItem>
           </Select>
         </Box>
-        <Box mb={12}>
+        <Box mb={5}>
           <Box mb={1} fontWeight={500}>Theme</Box>
           <Select
             fullWidth
@@ -136,13 +136,13 @@ function BuildPersona () {
             <MenuItem value="Family">Family</MenuItem>
           </Select>
         </Box>
-        <Box display="flex" gap={1}>
+        <Box display="flex" gap={10}>
           <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF"}} variant="outlined" onClick={resetForm}>Reset Form</Button>
           <Button sx={{backgroundColor: "#000"}} variant="contained" onClick={createPersona}>Create Persona</Button>
         </Box>
       </Box>
-      <Box flex={1} overflow="hidden">
-      {personaCreated ? (<Swiper
+      <Box flex={1} overflow="hidden" sx={{overflowY: 'auto',maxHeight: '85vh'}}>
+      {value.personas.length!=0 ? (<Swiper
           effect={'cards'}
           grabCursor={true}
           modules={[EffectCards]}
@@ -161,7 +161,7 @@ function BuildPersona () {
                       height: 35,
                       backgroundColor: "#e6e6e6",
                       color: "#b8b8b8",
-                      borderRadius: "50%"
+                      borderRadius: "50%", 
                     }}
                   >
                     <Face6Icon />
@@ -171,17 +171,33 @@ function BuildPersona () {
                 <Box display="flex" justifyContent="center" my={2}>
                   <img src={persona.avatar} alt="Avatar" style={{height: 200}} />
                 </Box>
-                <Box fontSize={16} color="#7d7d7d" fontWeight={400}>
+                <Box  
+                  sx={{
+                    fontSize: 16,
+                    color: "#7d7d7d",
+                    fontWeight: 400,
+                  }}
+                >
                   <Box>Name: {persona.name}</Box>
                   <Box>Age: {persona.age}</Box>
                   <Box>Gender: {persona.gender}</Box>
                   <Box>Occupation: {persona.occupation}</Box>
                   <Box>Medical Condition: {persona.diagnosis}</Box>
-                  <Box>Theme:{persona.theme}</Box>
-                  <Box mt={3}>{persona.desc}</Box>
+                  <Box>Theme: {persona.theme}</Box>
+                  <Box mt={3}> 
+                     {persona.desc} 
+                    </Box>
                 </Box>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                  <Button color="secondary" onClick={() => selectPersona(persona)}>SELECT AND Next</Button>
+                <Button color="secondary" onClick={() => {
+                  if (window.confirm("Are you sure you want to select this persona and proceed to the next step?")) {
+                     selectPersona(persona);
+                  } else {
+                 console.log("Selection cancelled.");
+               }
+                }}>
+                  SELECT
+                </Button>
                   <FavoriteIcon onClick={() => favoritePersona(persona)} sx={{color: value.favoritePersonas.find(p => p.id === persona.id) ? "red" : "black"}} />
                 </Box>
               </SwiperSlide>
