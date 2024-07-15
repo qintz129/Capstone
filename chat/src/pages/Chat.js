@@ -42,7 +42,7 @@ function Chat () {
       topic: value.selectedTopics,
       skills: value.selectedSkills,
       messages: [
-        { user: value.selectedPersona, content: ["Here are the top10 questions most people asked and you might fnd interesting:", "1. Can you tell us about youreducationaljourney and howyou became a school assistant?", "2. What are some accommodations or supports that helped you succeed in school?", "3. How do you think schools can better assist students with Down syndrome in theirlearning?", "4. Question 4", "5. Question 5", "6. Question 6", "7. Question 7"], datetime: new Date() }
+        { user: value.selectedPersona, content: ["Here are the top10 questions most people asked and you might fnd interesting:", "1. Can you tell us about your educational journey and how you became a school assistant?", "2. What are some accommodations or supports that helped you succeed in school?", "3. How do you think schools can better assist students with Down syndrome in theirlearning?", "4. Question 4", "5. Question 5", "6. Question 6", "7. Question 7"], datetime: new Date() }
       ],
       markedQuestions: []
     }
@@ -60,7 +60,7 @@ function Chat () {
   useEffect(() => {
     addChat();
   }, [])
-
+  // Guarantee the latest message is always visible
   useEffect(() => {
     scrollToBottom()
   }, [value.currentChat && value.currentChat.messages.length, messagesEndRef.current]);
@@ -135,7 +135,38 @@ function Chat () {
     }
   } 
   
-  console.log(value);
+  const useTypewriter = (text, speed = 50) => {
+    const [displayText, setDisplayText] = useState('');
+  
+    useEffect(() => {
+      let i = 0; 
+      // Timer
+      const typingInterval = setInterval(() => { 
+        // Callback function
+        if (i < text.length) { 
+          setDisplayText(prevText => prevText + text.charAt(i));
+          i++;
+        } else {
+          clearInterval(typingInterval);
+        }
+      }, speed);
+
+      return () => {
+        clearInterval(typingInterval);
+      };
+    }, [text, speed]);
+
+  return displayText;
+};
+  
+  const Typewriter = ({ text, speed = 20 }) => {
+    const displayText = useTypewriter(text, speed);
+  
+    return <p>{displayText}</p>;
+  };  
+
+  console.log(value.selectedSkills)
+
   return (
     <Box display="flex" height="100%">
       <Box p={2} sx={{backgroundColor: "#768259", width: 300}}>
@@ -290,7 +321,6 @@ function Chat () {
                   <Box>Gender: {value.selectedPersona.gender}</Box>
                   <Box>Occupation: {value.selectedPersona.occupation}</Box>
                   <Box>Diagnosis: {value.selectedPersona.diagnosis}</Box>
-                  <Box>Hobbies: {value.selectedPersona.hobbies}</Box>
                   <Box mt={3}>{value.selectedPersona.desc}</Box>
                 </Box>
                 <Box mt={2}>
@@ -357,33 +387,5 @@ function Chat () {
     </Box>
   )
 }
-
-const useTypewriter = (text, speed = 50) => {
-  const [displayText, setDisplayText] = useState('');
-
-  useEffect(() => {
-    let i = 0;
-    const typingInterval = setInterval(() => {
-      if (i < text.length) {
-        setDisplayText(prevText => prevText + text.charAt(i));
-        i++;
-      } else {
-        clearInterval(typingInterval);
-      }
-    }, speed);
-
-    return () => {
-      clearInterval(typingInterval);
-    };
-  }, [text, speed]);
-
-  return displayText;
-};
-
-const Typewriter = ({ text, speed = 20 }) => {
-  const displayText = useTypewriter(text, speed);
-
-  return <p>{displayText}</p>;
-};
 
 export default Chat

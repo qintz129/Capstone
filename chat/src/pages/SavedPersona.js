@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 
 function SavedPersona () {
   const { value, setValue } = useContext(ChatContext);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  console.log(value.selectedPersona);
 
   return (
     <Box display="flex" alignItems="stretch" justifyContent="space-evenly" flexWrap="wrap" gap={10} p={5}>
@@ -24,7 +25,6 @@ function SavedPersona () {
                   <Box>Gender: {persona.gender}</Box>
                   <Box>Occupation: {persona.occupation}</Box>
                   <Box>Diagnosis: {persona.diagnosis}</Box>
-                  <Box>Hobbies: {persona.hobbies}</Box>
                   <Box mt={3}>{persona.desc}</Box>
                 </Box>
               </CardContent>
