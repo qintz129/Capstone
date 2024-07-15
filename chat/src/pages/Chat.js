@@ -14,13 +14,15 @@ import ReplayIcon from '@mui/icons-material/Replay';
 import DeleteIcon from '@mui/icons-material/Delete'; 
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
+import EditIcon from '@mui/icons-material/Edit';
 
 function Chat () {
   const [text, setText] = useState("");
   const { value, setValue } = useContext(ChatContext);
   let messagesEndRef = useRef(null)
-  const [anchorEl, setAnchorEl] = useState(null); 
+  const [anchorEl, setAnchorEl] = useState(null);  
+  const [anchorMenu, setAnchorMenu] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate(); 
   const hasAddedChat = useRef(false);
@@ -43,10 +45,21 @@ function Chat () {
 
   const handleClose = () => {
     setAnchorEl(null);
+  }; 
+
+  const handleOpenMenu = (event) => {
+    setAnchorMenu(event.currentTarget);
+  };
+  
+  const handleCloseMenu = () => {
+    setAnchorMenu(null);
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? 'simple-popover' : undefined; 
+
+  const openMenu = Boolean(anchorMenu);
+  const menuID = openMenu ? 'simple-popover' : undefined;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -215,11 +228,6 @@ function Chat () {
       return prevValue;  
     });  
 
-    const EditQuestion = (question) => {    
-
-    }
-  
-
     setValue(prevValue => {
       const messageIndex = prevValue.currentChat.messages.findIndex(m => m.datetime === question.datetime);
       if (messageIndex !== -1 && messageIndex + 1 < prevValue.currentChat.messages.length) {
@@ -283,11 +291,41 @@ function Chat () {
   console.log("selectedPersona", value.selectedPersona);
 
   return (
-    <Box display="flex" height="100%">
+    <Box display="flex" height="100%"> 
       <Box p={2} sx={{backgroundColor: "#768259", width: 300}}>
         <Box display="flex" justifyContent="space-between">
-          <PersonOutlineOutlinedIcon sx={{fontSize: 40}} />
-          <MenuOutlinedIcon sx={{fontSize: 40}} />
+          <PersonOutlineOutlinedIcon sx={{fontSize: 40}} /> 
+          <Box>
+            <IconButton onClick={handleOpenMenu} sx={{ fontSize: 40 }}>
+              <MenuOutlinedIcon />
+            </IconButton>
+            <Popover
+                  id={menuID}
+                  open={openMenu}
+                  anchorEl={anchorMenu}
+                  onClose={handleCloseMenu}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }} 
+                  sx={{
+                    width: '220px' 
+                  }}
+                >
+                  <Box width={200}>
+                    <Box p={1} sx={{borderBottom: "1px solid #e1e1e1"}}>
+                      <Button fullWidth variant="text" onClick={() => navigate("/saved-persona")}>Persona Library</Button>
+                    </Box>
+                    <Box p={1}>
+                      <Button fullWidth variant="text" onClick={() => navigate("/interview-details/" + value.selectedPersona.id)}>Interview Details</Button>
+                    </Box>
+                  </Box>
+              </Popover> 
+            </Box>
         </Box>
         <Box
           display="flex"
@@ -402,7 +440,8 @@ function Chat () {
                     {
                       message.user === "user" ? (
                         <Box>
-                          <BookmarkAddIcon sx={{cursor: "pointer"}} onClick={() => markQuestion(message)} />
+                          <BookmarkAddIcon sx={{cursor: "pointer"}} onClick={() => markQuestion(message)} /> 
+                          <EditIcon sx={{cursor: "pointer"}} onClick={() => setText(message.content)} />   
                         </Box>
                       ) : (
                         !Array.isArray(message.content) && index === value.currentChat.messages.length-1 && (
@@ -482,7 +521,7 @@ function Chat () {
             </Collapse>
           </Card>
             <Box mb={2} mt={2} sx={{color: "#39462c", fontSize: 25, fontWeight: 700}}>Marked Questions</Box>
-            <Box display="flex" flexDirection="column" gap={1} sx={{borderColor: "#d5e1bf", borderStyle: "solid", borderWidth: "1px 0", fontWeight: 500, color: "#1b2559"}} py={3}>
+            <Box display="flex" flexDirection="column" gap={1} sx={{borderColor: "#d5e1bf", borderStyle: "solid", borderWidth: "1px 0", fontWeight: 500, color: "#1b2559"}} py={1}>
   {
     value.markedQuestions
       .filter(question => question.user === 'user')

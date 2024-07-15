@@ -14,8 +14,8 @@ function InterviewDetails () {
   const { value, setValue } = useContext(ChatContext); 
   const [designGoal, setDesignGoal] = useState(''); 
 
-  let allPersonas = value.summary.map(item => item.persona);
-  allPersonas = [...allPersonas, ...value.favoritePersonas];
+  // let allPersonas = value.summary.map(item => item.persona);
+  const allPersonas = [value.selectedPersona, ...value.favoritePersonas];
   const matchedPersona = allPersonas.find(p => p.id === Number(id)); 
   const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages; 
   console.log("summary", value.summary); 
