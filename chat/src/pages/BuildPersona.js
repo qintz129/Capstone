@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, FormControl, Select, MenuItem, TextField, Autocomplete, Button } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
@@ -16,7 +16,14 @@ function BuildPersona () {
   const [age, setAge] = useState("")
   const [occupation, setOccupation] = useState("")
   const [medicalCondition, setMedicalCondition] = useState("")
-  const [theme, setTheme] = useState("") 
+  const [theme, setTheme] = useState("")  
+  const occupations = [
+    "Student",
+    "Artist",
+    "Barista",
+    "School Assistant",
+    "Shop Assistant"
+  ]; 
 
   const { value, setValue } = useContext(ChatContext);
   const navigate = useNavigate();
@@ -74,7 +81,7 @@ function BuildPersona () {
       ...value,
       favoritePersonas
     })
-  }
+  } 
 
   return (
     <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10} mb={5}>
@@ -96,21 +103,25 @@ function BuildPersona () {
           </FormControl>
         </Box>
         <Box mb={3}>
-          <Box mb={1} fontWeight={500}>Occupation</Box>
-          <FormControl fullWidth size="small">
-            <Select
-              value={occupation}
-              onChange={e => setOccupation(e.target.value)}
-              sx={{backgroundColor: "white"}}
-            >
-              <MenuItem value="Student">Student</MenuItem>
-              <MenuItem value="Artist">Artist</MenuItem>
-              <MenuItem value="Barista">Barista</MenuItem>
-              <MenuItem value="School Assistant">School Assistant</MenuItem>
-              <MenuItem value="Shop Assistant">Shop Assistant</MenuItem> 
-            </Select>
-          </FormControl>
-        </Box>
+        <Box mb={1} fontWeight={500}>Occupation</Box>
+        <FormControl fullWidth size="small">
+          <Autocomplete
+            freeSolo
+            value={occupation}
+            onChange={(event, newValue) => setOccupation(newValue)}
+            onInputChange={(event, newInputValue) => setOccupation(newInputValue)}
+            options={occupations}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                sx={{ backgroundColor: "white" }}
+                variant="outlined"
+                size="small"
+              />
+            )}
+          />
+        </FormControl>
+    </Box>
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Medical Condition</Box>
           <Select
@@ -142,7 +153,16 @@ function BuildPersona () {
           <Button sx={{backgroundColor: "#000"}} variant="contained" onClick={createPersona}>Create Persona</Button>
         </Box>
       </Box>
-      <Box flex={1} overflow="hidden" sx={{overflowY: 'auto',maxHeight: '85vh'}}>
+      <Box flex={1} overflow="hidden"  
+          sx={{
+            overflowY: 'auto', 
+            maxHeight: '85vh',
+            '::-webkit-scrollbar': {
+              display: 'none'
+            },
+            scrollbarWidth: 'none'
+          }}
+        > 
       {value.personas.length!=0 ? (<Swiper
           effect={'cards'}
           grabCursor={true}

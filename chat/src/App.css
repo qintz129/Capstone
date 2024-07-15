@@ -29,7 +29,7 @@ html, body {
 }
 
 .mySwiper {
-    width: 450px;
+    width: 480px;
 }
 
 .mySwiper .swiper-slide {
@@ -91,6 +91,7 @@ html, body {
 .swiper.mySwiper3 {
     padding: 20px 0; 
 } 
+
 
 .mySwiper3 .swiper-slide {
     background-color: #f1f1cf;

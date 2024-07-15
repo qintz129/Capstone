@@ -322,7 +322,7 @@ function Chat () {
                     </Box>
                     <Box p={1}>
                       <Button fullWidth variant="text" onClick={() => navigate("/interview-details/" + value.selectedPersona.id)}>Interview Details</Button>
-                    </Box>
+                    </Box> 
                   </Box>
               </Popover> 
             </Box>

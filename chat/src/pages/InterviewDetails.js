@@ -12,13 +12,20 @@ function InterviewDetails () {
   const { id } = useParams()
 
   const { value, setValue } = useContext(ChatContext); 
-  const [designGoal, setDesignGoal] = useState(''); 
+   
 
   // let allPersonas = value.summary.map(item => item.persona);
   const allPersonas = [value.selectedPersona, ...value.favoritePersonas];
-  const matchedPersona = allPersonas.find(p => p.id === Number(id)); 
-  const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages; 
-  console.log("summary", value.summary); 
+  const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages;   
+  const foundPersona = allPersonas.find(p => p.id === Number(id));  
+  const [matchedPersona, setMatchedPersona] = useState(foundPersona);
+  const handleDesignGoalChange = (event) => {
+    setMatchedPersona(prev => ({
+      ...prev, 
+      designGoal: event.target.value 
+    }));
+  };
+  console.log("summary", value.summary);  
 
   const handleEdit = () => { 
     setValue((prev) => ({
@@ -29,7 +36,8 @@ function InterviewDetails () {
     navigate("/your-topic");
   }
   return (
-    <Box display="flex" p={5} gap={5}>
+    <Box> 
+     <Box display="flex" p={5} gap={5}>
       {
         matchedPersona && (
           <Box
@@ -70,8 +78,8 @@ function InterviewDetails () {
           <Box display="flex" flexDirection="column" mb={2} gap="4px"> 
             Design Goal:  
               <TextField
-              value={designGoal}
-              onChange={(e) => setDesignGoal(e.target.value)}
+              value={matchedPersona.designGoal}
+              onChange={handleDesignGoalChange}
               variant="outlined"
               size="small"  
               multiline  
@@ -110,8 +118,9 @@ function InterviewDetails () {
             ))
           )
         }
-      </Box> 
-      <Box justifyContent="center" mt={5}>
+        </Box>  
+      </Box>
+      <Box justifyContent="center" mt={2} px={5} mb={3}>
         <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={handleEdit}>Restart your interview</Button> 
       </Box>
     </Box>

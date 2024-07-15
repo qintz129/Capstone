@@ -30,7 +30,7 @@ function ChooseTopics () {
       navigate("/your-topic")
     }
   }
-  console.log(value);
+
   return (
     <Box textAlign="center" py={5} px={15}>
       <Box fontSize={45} fontWeight={700}>Choose Topics</Box>

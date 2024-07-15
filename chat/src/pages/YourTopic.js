@@ -12,7 +12,9 @@ import EmploymentImage from "../assets/images/employment.jpg";
 import EducationImage from "../assets/images/education.jpg";
 import FamilyImage from "../assets/images/family.jpg"; 
 import Tooltip from '@mui/material/Tooltip'; 
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveIcon from '@mui/icons-material/Remove'; 
+import 'swiper/css';
+import 'swiper/css/navigation';
 
 
 function YourTopic () {
@@ -153,7 +155,7 @@ function YourTopic () {
     navigate("/chat");
   } 
 
-  console.log("selectedSPersona", value.selectedPersona);
+  console.log("skills", skills);
 
   return (
     <Box textAlign="center" py={2} px={3}>
@@ -203,7 +205,7 @@ function YourTopic () {
                 >  
                 <Box fontSize={24} fontWeight={600} marginTop={3}>{skill.title}</Box>
                 <Box fontSize={14} fontWeight={300} height={100} marginTop={3} marginBottom={2}>{skill.desc}</Box>
-                <Box textAlign="left" flex={1} p={2} pb={0}>
+                <Box textAlign="left" flex={1} p={2}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography fontWeight={600}>Explore Ability Drivers and Ability Blockers</Typography>

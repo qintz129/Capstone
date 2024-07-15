@@ -8,7 +8,9 @@ import BuildPersona from './pages/BuildPersona';
 import YourTopic from './pages/YourTopic';
 import Chat from './pages/Chat';
 import SavedPersona from './pages/SavedPersona';
-import InterviewDetails from './pages/InterviewDetails';
+import InterviewDetails from './pages/InterviewDetails'; 
+// import FeaturedAbilities from './pages/FeaturedAbilities'; 
+// import ChooseTopics from './pages/ChooseTopics';
 
 export const ChatContext = createContext(null);
 
@@ -70,7 +72,8 @@ function App() {
       // },
     ],
     favoritePersonas: [],
-    markedQuestions: [], 
+    markedQuestions: [],  
+    designGoal: "",
     summary:[]
   })
 
