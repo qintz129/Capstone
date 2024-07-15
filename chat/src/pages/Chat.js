@@ -10,14 +10,24 @@ import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from 'react-router-dom';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
-import ReplayIcon from '@mui/icons-material/Replay';
+import ReplayIcon from '@mui/icons-material/Replay'; 
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function Chat () {
   const [text, setText] = useState("");
   const { value, setValue } = useContext(ChatContext);
   let messagesEndRef = useRef(null)
   const [anchorEl, setAnchorEl] = useState(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
+  const hasAddedChat = useRef(false);
+  const preDefine = ["Here are the top10 questions most people asked and you might fnd interesting:", 
+                      "1. Can you tell us about your educational journey and how you became a school assistant?",  
+                      "2. What are some accommodations or supports that helped you succeed in school?",  
+                      "3. How do you think schools can better assist students with Down syndrome in theirlearning?",  
+                      "4. Question 4",  
+                      "5. Question 5", 
+                      "6. Question 6",  
+                      "7. Question 7"];
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,62 +42,85 @@ function Chat () {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+  } 
 
   const addChat = () => {
     const newChat = {
-      id: value.chats.length + 1,
+      id: value.selectedPersona.chats.length + 1,
       createDatetime: new Date(),
-      persona: value.selectedPersona,
-      topic: value.selectedTopics,
-      skills: value.selectedSkills,
       messages: [
-        { user: value.selectedPersona, content: ["Here are the top10 questions most people asked and you might fnd interesting:", "1. Can you tell us about your educational journey and how you became a school assistant?", "2. What are some accommodations or supports that helped you succeed in school?", "3. How do you think schools can better assist students with Down syndrome in theirlearning?", "4. Question 4", "5. Question 5", "6. Question 6", "7. Question 7"], datetime: new Date() }
+        { user: "pre-defined", content: preDefine, datetime: new Date() }
       ],
-      markedQuestions: []
     }
 
-    setValue({
-      ...value,
-      chats: [
-        ...value.chats,
-        newChat
-      ],
+    setValue(prevValue => ({
+      ...prevValue,  
+      // if the currentChat changes, the specific chat in the selectedPersona.chats should be updated, since they have the same reference
+      selectedPersona: {
+        ...prevValue.selectedPersona,
+        chats: [...prevValue.selectedPersona.chats, 
+          newChat 
+        ] 
+      }, 
       currentChat: newChat
-    })
+    }));
+  } 
+
+  const initializeChat = () => { 
+    if (!hasAddedChat.current) { 
+      console.log("Initialize new chat");
+      addChat();
+      hasAddedChat.current = true;   
+    } 
   }
 
-  useEffect(() => {
-    addChat();
+  useEffect(() => { 
+    if (!hasAddedChat.current && (!value.selectedPersona.chats || value.selectedPersona.chats.length === 0)) {
+    initializeChat();  
+    } else { 
+      setValue(prevValue => ({
+        ...prevValue,
+        currentChat: prevValue.selectedPersona.chats[prevValue.selectedPersona.chats.length - 1]
+      }));
+    }
   }, [])
+  
   // Guarantee the latest message is always visible
   useEffect(() => {
     scrollToBottom()
   }, [value.currentChat && value.currentChat.messages.length, messagesEndRef.current]);
+
+
 
   const sendMessage = (message) => {
     if (text || message) {
       value.currentChat.messages.push({
         user: "user", content: text || message, datetime: new Date()
       })
-      setValue({
-        ...value,
-        chats: [...value.chats]
-      })
+      setValue(prevValue => ({
+        ...prevValue,
+        selectedPersona: {
+          ...prevValue.selectedPersona,
+          chats: [...prevValue.selectedPersona.chats] 
+        }
+      }));
       setText("")
 
       setTimeout(() => {
         const newMessage = {
-          user: value.selectedPersona,
+          user: "persona",
           content: faker.lorem.paragraph(),
           datetime: new Date(),
           new: true
         }
         value.currentChat.messages.push(newMessage)
-        setValue({
-          ...value,
-          chats: [...value.chats]
-        })
+        setValue(prevValue => ({
+          ...prevValue,
+          selectedPersona: {
+            ...prevValue.selectedPersona,
+            chats: [...prevValue.selectedPersona.chats] 
+          }
+        }));
 
         setTimeout(() => {
           newMessage.new = false
@@ -98,23 +131,29 @@ function Chat () {
 
   const reGenerate = () => {
     value.currentChat.messages.pop()
-    setValue({
-      ...value,
-      chats: [...value.chats]
-    })
+    setValue(prevValue => ({
+      ...prevValue,
+      selectedPersona: {
+        ...prevValue.selectedPersona,
+        chats: [...prevValue.selectedPersona.chats] 
+      }
+    }));
 
     setTimeout(() => {
       const newMessage = {
-        user: value.selectedPersona,
+        user: "persona",
         content: faker.lorem.paragraph(),
         datetime: new Date(),
         new: true
       }
       value.currentChat.messages.push(newMessage)
-      setValue({
-        ...value,
-        chats: [...value.chats]
-      })
+      setValue(prevValue => ({
+        ...prevValue,
+        selectedPersona: {
+          ...prevValue.selectedPersona,
+          chats: [...prevValue.selectedPersona.chats] 
+        }
+      }));
 
       setTimeout(() => {
         newMessage.new = false
@@ -123,17 +162,73 @@ function Chat () {
   }
 
   const summarize = (marked) => {
-    navigate("/saved-persona")
+    setValue(prevValue => {
+      const existingIndex = prevValue.summary.findIndex(item => item.persona.id === prevValue.selectedPersona.id);
+      
+      let newSummary = [];
+      if (existingIndex !== -1) {
+        newSummary = prevValue.summary.map((item, index) => {
+          if (index === existingIndex) {
+            return {
+              ...item,
+              messages: marked ? prevValue.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
+            };
+          }
+          return item;
+        });
+      } else {
+        newSummary = [
+          ...prevValue.summary || [],
+          {
+            id: prevValue.summary ? prevValue.summary.length + 1 : 1,
+            persona: prevValue.selectedPersona,
+            messages: marked ? prevValue.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
+          }
+        ];
+      }
+  
+      return {
+        ...prevValue,
+        summary: newSummary
+      };
+    });
+  
+    navigate("/saved-persona");
   }
+  
+  const markQuestion = (question) => {
+    setValue(prevValue => {
+      if (!prevValue.markedQuestions.find(mq => mq.datetime === question.datetime)) {
+        return {
+          ...prevValue,
+          markedQuestions: [...prevValue.markedQuestions, question]
+        };
+      }
+      return prevValue;  
+    });
+  
 
-  const markQuestion = (message) => {
-    if (!value.markedQuestions.find(mq => mq.datetime === message.datetime)) {
-      setValue({
-        ...value,
-        markedQuestions: [...value.markedQuestions, message]
-      })
-    }
+    setValue(prevValue => {
+      const messageIndex = prevValue.currentChat.messages.findIndex(m => m.datetime === question.datetime);
+      if (messageIndex !== -1 && messageIndex + 1 < prevValue.currentChat.messages.length) {
+        const answer = prevValue.currentChat.messages[messageIndex + 1];
+        if (!prevValue.markedQuestions.find(mq => mq.datetime === answer.datetime)) {
+          return {
+            ...prevValue,
+            markedQuestions: [...prevValue.markedQuestions, answer]
+          };
+        }
+      }
+      return prevValue; 
+    });
   } 
+
+  const handleDeleteQuestion = (index) => {
+    setValue(prevValue => ({
+      ...prevValue,
+      markedQuestions: prevValue.markedQuestions.filter((_, i) => i !== index && i !== index + 1)
+    }));
+  }
   
   const useTypewriter = (text, speed = 50) => {
     const [displayText, setDisplayText] = useState('');
@@ -165,7 +260,8 @@ function Chat () {
     return <p>{displayText}</p>;
   };  
 
-  console.log(value.selectedSkills)
+  const title = `Chat with ${value.selectedPersona.name} about ${value.selectedPersona.theme}`;  
+  console.log("selectedPersona", value.selectedPersona);
 
   return (
     <Box display="flex" height="100%">
@@ -189,7 +285,7 @@ function Chat () {
           <Box color="rgba(255, 255, 255, 0.5)">Previous 7 Days</Box>
           <Box>
             {
-              value.chats.map(chat => (
+              value.selectedPersona.chats.map(chat => (
                 <Box
                   display="flex"
                   alignItems="center"
@@ -216,7 +312,9 @@ function Chat () {
                     overflow: "hidden",
                     color: "#FFFFFF",
                     my: 1
-                  }}>{chat.messages[0].content[0]}</Box>
+                  }}>
+                    {`Chat with ${value.selectedPersona.name} ${chat.id}`} 
+                  </Box>
                 </Box>
               ))
             }
@@ -231,7 +329,7 @@ function Chat () {
         <Box sx={{height: 80, backgroundColor: "#61694d"}}></Box>
         <Box display="flex" p={2} flex={1} gap={1} height="calc(100% - 80px)" boxSizing="border-box">
           <Box display="flex" flexDirection="column" position="relative" flex={1}>
-            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>Chat with {value.selectedPersona.name} about {value.selectedPersona?.theme}</Box>
+            <Box p={2} borderRadius={2} sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a", fontSize: 20 ,fontWeight: 600}}>{title}</Box>
             <Box display="flex" flexDirection="column" mt={2} flex={1} mb={10} sx={{overflowY: "auto"}}>
               {
                 value.currentChat && value.currentChat.messages.map((message, index) => (
@@ -299,14 +397,27 @@ function Chat () {
               }
               <div style={{ float:"left", clear: "both" }} ref={messagesEndRef}></div>
             </Box>
-            <Box display="flex" alignItems="center" position="absolute" left={0} bottom={5} width="100%">
-              <Box flex={1} p={2} borderRadius="8px 0 0 8px" sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a"}}>
-                <input style={{border: 'none', outline: 'none', background: 'none', width: "100%"}} value={text} onChange={e => setText(e.target.value)} />
+              <Box display="flex" alignItems="center" position="absolute" left={0} bottom={5} width="100%">
+                <Box flex={1} p={2} borderRadius="8px 0 0 8px" sx={{backgroundColor: "#f1dab9", border: "1px solid #d8be9a"}}>
+                  <input 
+                    style={{border: 'none', outline: 'none', background: 'none', width: "100%"}} 
+                    value={text} 
+                    onChange={e => setText(e.target.value)} 
+                  />
               </Box>
-              <Box borderRadius="0 8px 8px 0" sx={{backgroundColor: "#435334", color: "#ffffff", padding: "14px 16px", cursor: "pointer"}} onClick={sendMessage}>
-                <SendIcon />
-              </Box>
-            </Box>
+              <Box 
+                borderRadius="0 8px 8px 0" 
+                sx={{
+                  backgroundColor: text ? "#435334" : "#A9A9A9", 
+                  color: "#ffffff", 
+                  padding: "14px 16px", 
+                  cursor: text ? "pointer" : "default" 
+                }} 
+                onClick={() => text && sendMessage()}
+              >
+            <SendIcon />
+          </Box>
+        </Box>
           </Box>
           <Box p={1} sx={{width: 380, height: "calc(100% - 16px)", backgroundColor: "#ebebbf", borderRadius: 2, overflowY: "auto"}}>
             <Box mb={1} sx={{color: "#39462c", fontSize: 30, fontWeight: 700}}>Documentation</Box>
@@ -326,23 +437,36 @@ function Chat () {
                 <Box mt={2}>
                   <Box fontSize={18} fontWeight={700} mb={1}>Abilities:</Box>
                   <Box display="flex" flexWrap="wrap" gap={1}>
-                    {
-                      value.selectedSkills.map(skill => (
-                        <Box fontWeight={600} sx={{backgroundColor: "#d6bc97", padding: 1, borderRadius: 3}} key={skill.id}>{skill.title}</Box>
-                      ))
-                    }
+                    {value.selectedPersona.selectedSkills && value.selectedPersona.selectedSkills.map(skill => (
+                      <Box 
+                        fontWeight={600} 
+                        sx={{ backgroundColor: "#d6bc97", padding: 1, borderRadius: 3 }} 
+                        key={skill.id}
+                      >
+                        {skill.title}
+                      </Box>
+                    ))}
                   </Box>
                 </Box>
               </CardContent>
             </Card>
             <Box mb={2} mt={2} sx={{color: "#39462c", fontSize: 25, fontWeight: 700}}>Marked Questions</Box>
             <Box display="flex" flexDirection="column" gap={1} sx={{borderColor: "#d5e1bf", borderStyle: "solid", borderWidth: "1px 0", fontWeight: 500, color: "#1b2559"}} py={3}>
-              {
-                value.markedQuestions.map((question, index) => (
-                  <Box key={index}>Q{index+1}: {question.content}</Box>
-                ))
-              }
-            </Box>
+  {
+    value.markedQuestions
+      .filter(question => question.user === 'user')
+      .map((question, index) => (
+        <Box key={index} sx={{ display: 'flex', alignItems: 'center', }}>
+          <Box>{question.content}</Box>
+          <Button   
+            startIcon={<DeleteIcon sx={{ color: 'gray' }}/>} 
+            color="secondary"
+            onClick={() => handleDeleteQuestion(index)} style={{ cursor: 'pointer' }}>
+          </Button> 
+          </Box>
+          ))
+          }
+        </Box>
             <Box>
               <Box
                 p={1}

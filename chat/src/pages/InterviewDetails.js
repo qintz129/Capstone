@@ -1,18 +1,33 @@
 import { useParams } from 'react-router-dom';
-import { Box } from '@mui/material';
-import { useContext, useState } from 'react';
+import { Box, Button} from '@mui/material';
+import { useContext, useState, useEffect } from 'react';
 import { ChatContext } from '../App';
 import backgroundImage from "../assets/images/bg.jpg"; 
-import TextField from '@mui/material/TextField';
+import TextField from '@mui/material/TextField'; 
+import { useNavigate } from 'react-router-dom';
 
-function InterviewDetails () {
+
+function InterviewDetails () { 
+  const navigate = useNavigate();
   const { id } = useParams()
 
   const { value, setValue } = useContext(ChatContext); 
-  const [designGoal, setDesignGoal] = useState('');
+  const [designGoal, setDesignGoal] = useState(''); 
 
-  const matchedPersona = [value.selectedPersona, ...value.favoritePersonas].find(p => p.id === Number(id))
-  console.log("currentChat", value.currentChat)
+  let allPersonas = value.summary.map(item => item.persona);
+  allPersonas = [...allPersonas, ...value.favoritePersonas];
+  const matchedPersona = allPersonas.find(p => p.id === Number(id)); 
+  const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages; 
+  console.log("summary", value.summary); 
+
+  const handleEdit = () => { 
+    setValue((prev) => ({
+      ...prev,
+      selectedPersona: matchedPersona,
+      favoritePersonas: prev.favoritePersonas.filter(persona => persona.id !== matchedPersona.id)
+    })); 
+    navigate("/your-topic");
+  }
   return (
     <Box display="flex" p={5} gap={5}>
       {
@@ -46,7 +61,12 @@ function InterviewDetails () {
         <Box sx={{backgroundColor: "#ced3da"}} p={2}>
           <Box sx={{fontSize: 30, fontWeight: 700}} mb={4}>Background</Box>
           <Box display="flex" alignItems="center" mb={2} gap="4px">Interview Topic: <Box fontWeight={700}>{matchedPersona.theme}</Box></Box>
-          <Box mb={2} gap="4px">Focused Abilities: <Box fontWeight={700}>{value.selectedSkills.map(skill => skill.title).join(", ")}</Box></Box> 
+            <Box mb={2} gap="4px"> 
+              Focused Abilities:  
+              <Box fontWeight={700}> 
+                {matchedPersona.selectedSkills ? matchedPersona.selectedSkills.map(skill => skill.title).join(", ") : ''}
+              </Box>
+            </Box> 
           <Box display="flex" flexDirection="column" mb={2} gap="4px"> 
             Design Goal:  
               <TextField
@@ -70,19 +90,29 @@ function InterviewDetails () {
         </Box>
       </Box>
       <Box
-        flex={1}
-        sx={{
-          backgroundImage: `url('${backgroundImage}')`,
-          backgroundSize: "cover"
-        }}
-        p={4}
-      >
-        <Box fontSize={18} fontWeight={700} mb={2}>Questions</Box>
+          flex={1}
+          sx={{
+            backgroundImage: `url('${backgroundImage}')`,
+            backgroundSize: "cover"
+          }}
+          p={4}
+        >
+        <Box fontSize={18} fontWeight={700} mb={2}>Interview Summary</Box>
         {
-          value.currentChat.messages.slice(1).map((message, index) => (
-            <Box key={index} mb={2}>{message.user === "user" ? `Q${(index + 1 + 1) / 2}` : message.user.name}: {message.content}</Box>
-          ))
+          (matchedMessage && matchedMessage.length > 0) && (
+            matchedMessage.map((message, index) => (
+              <Box key={index} mb={2}>
+                {message.user === "persona" ? `${matchedPersona.name}: ` : ''}
+                <span style={{ fontWeight: message.user === "user" ? 'bold' : 'normal' }}>
+                    {message.content}
+                </span>
+              </Box>
+            ))
+          )
         }
+      </Box> 
+      <Box justifyContent="center" mt={5}>
+        <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={handleEdit}>Restart your interview</Button> 
       </Box>
     </Box>
   )

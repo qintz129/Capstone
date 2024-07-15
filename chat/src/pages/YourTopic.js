@@ -18,7 +18,7 @@ import RemoveIcon from '@mui/icons-material/Remove';
 function YourTopic () {
   const navigate = useNavigate(); 
   const { value, setValue } = useContext(ChatContext); 
-  const [selectedSkills, setSelectedSkills] = useState(value.selectedSkills || [])
+  const [selectedSkills, setSelectedSkills] = useState(value.selectedPersona.selectedSkills || [])
  
 
   const skillsByTheme = {
@@ -140,17 +140,20 @@ function YourTopic () {
   }; 
 
 
-  const handleNext = () => { 
+  const handleNext = () => {
     if (selectedSkills.length > 0) {
-      setValue({
-        ...value,
-        selectedSkills
-      })
-      navigate("/chat")
+      setValue(prevValue => ({
+        ...prevValue,
+        selectedPersona: {
+          ...prevValue.selectedPersona,
+          selectedSkills: selectedSkills
+        }
+      }));
     }
+    navigate("/chat");
   } 
 
-  console.log(selectedSkills)
+  console.log("selectedSPersona", value.selectedPersona);
 
   return (
     <Box textAlign="center" py={2} px={3}>

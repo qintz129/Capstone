@@ -5,8 +5,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import BuildPersona from './pages/BuildPersona';
-import FeaturedAbilities from './pages/FeaturedAbilities';
-import ChooseTopics from './pages/ChooseTopics';
 import YourTopic from './pages/YourTopic';
 import Chat from './pages/Chat';
 import SavedPersona from './pages/SavedPersona';
@@ -71,9 +69,9 @@ function App() {
       //   desc: "Hello! My name is Bob, ....."
       // },
     ],
-    chats: [],
     favoritePersonas: [],
-    markedQuestions: []
+    markedQuestions: [], 
+    summary:[]
   })
 
   return (

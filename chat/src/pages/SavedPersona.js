@@ -6,14 +6,16 @@ import { useNavigate } from 'react-router-dom';
 function SavedPersona () {
   const { value, setValue } = useContext(ChatContext);
   const navigate = useNavigate(); 
-  console.log(value.selectedPersona);
+  console.log("summary", value.summary); 
+  let allPersonas = value.summary.map(item => item.persona);
+  allPersonas = [...allPersonas, ...value.favoritePersonas];
 
   return (
     <Box display="flex" alignItems="stretch" justifyContent="space-evenly" flexWrap="wrap" gap={10} p={5}>
       {
-        [value.selectedPersona, ...value.favoritePersonas].map((persona, index) => (
+        allPersonas.map((persona, index) => (
           <Box width={400} key={persona.id} onClick={() => navigate("/interview-details/" + persona.id)}>
-            <Box fontSize={18} mb={2}>Saved Persona {index + 1}</Box>
+            <Box fontSize={18} mb={2}>{`Saved Persona: ${persona.name} `}</Box>
             <Card sx={{height: "100%"}}>
               <CardContent>
                 <Box display="flex" justifyContent="center" my={2}>

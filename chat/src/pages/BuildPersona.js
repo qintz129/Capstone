@@ -53,7 +53,8 @@ function BuildPersona () {
       avatar: avatar,
       occupation: occupation,
       diagnosis: medicalCondition,
-      desc: faker.lorem.lines(10)
+      desc: faker.lorem.lines(10), 
+      chats:[]
     };
     
     setValue({
