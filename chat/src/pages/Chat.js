@@ -11,13 +11,17 @@ import { faker } from '@faker-js/faker';
 import { useNavigate } from 'react-router-dom';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline'
 import ReplayIcon from '@mui/icons-material/Replay'; 
-import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteIcon from '@mui/icons-material/Delete'; 
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function Chat () {
   const [text, setText] = useState("");
   const { value, setValue } = useContext(ChatContext);
   let messagesEndRef = useRef(null)
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); 
+  const [expanded, setExpanded] = useState(false);
   const navigate = useNavigate(); 
   const hasAddedChat = useRef(false);
   const preDefine = ["Here are the top10 questions most people asked and you might fnd interesting:", 
@@ -28,6 +32,10 @@ function Chat () {
                       "5. Question 5", 
                       "6. Question 6",  
                       "7. Question 7"];
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };         
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -205,7 +213,11 @@ function Chat () {
         };
       }
       return prevValue;  
-    });
+    });  
+
+    const EditQuestion = (question) => {    
+
+    }
   
 
     setValue(prevValue => {
@@ -260,7 +272,14 @@ function Chat () {
     return <p>{displayText}</p>;
   };  
 
-  const title = `Chat with ${value.selectedPersona.name} about ${value.selectedPersona.theme}`;  
+  const title = `Chat with ${value.selectedPersona.name} about ${value.selectedPersona.theme}`;   
+
+  const isRecent = (chatDate) => {
+    const now = new Date(); 
+    const sevenDaysAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 7); 
+  
+    return new Date(chatDate) >= sevenDaysAgo;
+  };
   console.log("selectedPersona", value.selectedPersona);
 
   return (
@@ -285,7 +304,8 @@ function Chat () {
           <Box color="rgba(255, 255, 255, 0.5)">Previous 7 Days</Box>
           <Box>
             {
-              value.selectedPersona.chats.map(chat => (
+              value.selectedPersona.chats.filter(chat => isRecent(chat.createDatetime)) 
+              .map(chat => (
                 <Box
                   display="flex"
                   alignItems="center"
@@ -385,9 +405,9 @@ function Chat () {
                           <BookmarkAddIcon sx={{cursor: "pointer"}} onClick={() => markQuestion(message)} />
                         </Box>
                       ) : (
-                        !Array.isArray(message.content) && (
+                        !Array.isArray(message.content) && index === value.currentChat.messages.length-1 && (
                           <Box>
-                            <ReplayIcon sx={{cursor: "pointer"}} onClick={reGenerate} />
+                            <ReplayIcon sx={{cursor: "pointer"}} onClick={() => reGenerate(index)} />
                           </Box>
                         )
                       )
@@ -421,20 +441,19 @@ function Chat () {
           </Box>
           <Box p={1} sx={{width: 380, height: "calc(100% - 16px)", backgroundColor: "#ebebbf", borderRadius: 2, overflowY: "auto"}}>
             <Box mb={1} sx={{color: "#39462c", fontSize: 30, fontWeight: 700}}>Documentation</Box>
-            <Card>
-              <CardContent>
-                <Box display="flex" justifyContent="center" my={2}>
-                  <img src={value.selectedPersona.avatar} alt="Avatar" style={{height: 80}} />
-                </Box>
-                <Box fontSize={16} color="#7d7d7d" fontWeight={400}>
-                  <Box>Name: {value.selectedPersona.name}</Box>
-                  <Box>Age: {value.selectedPersona.age}</Box>
-                  <Box>Gender: {value.selectedPersona.gender}</Box>
-                  <Box>Occupation: {value.selectedPersona.occupation}</Box>
-                  <Box>Diagnosis: {value.selectedPersona.diagnosis}</Box>
-                  <Box mt={3}>{value.selectedPersona.desc}</Box>
-                </Box>
-                <Box mt={2}>
+          <Card>
+            <CardContent>
+              <Box display="flex" justifyContent="center" my={2}>
+                <img src={value.selectedPersona.avatar} alt="Avatar" style={{height: 80}} />
+              </Box>
+              <Box fontSize={16} color="#7d7d7d" fontWeight={400}>
+                <Box>Name: {value.selectedPersona.name}</Box>
+                <Box>Age: {value.selectedPersona.age}</Box>
+                <Box>Gender: {value.selectedPersona.gender}</Box>
+                <Box>Occupation: {value.selectedPersona.occupation}</Box>
+                <Box>Diagnosis: {value.selectedPersona.diagnosis}</Box>
+              </Box> 
+              <Box mt={2}>
                   <Box fontSize={18} fontWeight={700} mb={1}>Abilities:</Box>
                   <Box display="flex" flexWrap="wrap" gap={1}>
                     {value.selectedPersona.selectedSkills && value.selectedPersona.selectedSkills.map(skill => (
@@ -448,16 +467,28 @@ function Chat () {
                     ))}
                   </Box>
                 </Box>
+              <IconButton
+                onClick={handleExpandClick}
+                aria-expanded={expanded}
+                aria-label="show more" 
+              >
+                <ExpandMoreIcon />
+              </IconButton>
+            </CardContent>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+              <CardContent>
+                <Box>{value.selectedPersona.desc}</Box>
               </CardContent>
-            </Card>
+            </Collapse>
+          </Card>
             <Box mb={2} mt={2} sx={{color: "#39462c", fontSize: 25, fontWeight: 700}}>Marked Questions</Box>
             <Box display="flex" flexDirection="column" gap={1} sx={{borderColor: "#d5e1bf", borderStyle: "solid", borderWidth: "1px 0", fontWeight: 500, color: "#1b2559"}} py={3}>
   {
     value.markedQuestions
       .filter(question => question.user === 'user')
       .map((question, index) => (
-        <Box key={index} sx={{ display: 'flex', alignItems: 'center', }}>
-          <Box>{question.content}</Box>
+        <Box key={index} sx={{ display: 'flex', alignItems: 'center'}}> 
+          <Box sx={{ marginRight: 2 }}>{question.content}</Box>
           <Button   
             startIcon={<DeleteIcon sx={{ color: 'gray' }}/>} 
             color="secondary"
