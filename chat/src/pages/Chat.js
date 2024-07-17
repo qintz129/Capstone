@@ -30,7 +30,7 @@ function Chat () {
   const preDefine = ["Here are the top10 questions most people asked and you might fnd interesting:", 
                       "1. Can you tell us about your educational journey and how you became a school assistant?",  
                       "2. What are some accommodations or supports that helped you succeed in school?",  
-                      "3. How do you think schools can better assist students with Down syndrome in theirlearning?",  
+                      "3. How do you think schools can better assist students with Down syndrome in their learning?",  
                       "4. Question 4",  
                       "5. Question 5", 
                       "6. Question 6",  

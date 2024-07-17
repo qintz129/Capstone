@@ -19,11 +19,18 @@ function BuildPersona () {
   const [medicalCondition, setMedicalCondition] = useState("")
   const [theme, setTheme] = useState("")  
   const occupations = [
-    "Student",
-    "Artist",
-    "Barista",
+    "Artist",  
+    "Athlete", 
+    "Baker",
+    "Business Owner",
+    "Customer Service", 
+    "Cooker",
     "School Assistant",
-    "Shop Assistant"
+    "Shop Assistant",   
+    "Office Assistant",  
+    "Social Activist",
+    "Student",   
+    "Teacher", 
   ]; 
 
   const { value, setValue } = useContext(ChatContext);
@@ -50,7 +57,7 @@ function BuildPersona () {
 
   const createPersona = () => {  
     if (!age || !occupation || !medicalCondition || !theme) { 
-      window.alert("Please fill in all the fields to create a persona."); 
+      window.alert("Please fill in age, medicalCondition and theme to create a persona."); 
       return; 
     }
     const gender = faker.helpers.arrayElement(['Female', 'Male']); 
