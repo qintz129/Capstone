@@ -63,7 +63,7 @@ function BuildPersona () {
     const newPersona = {
       id: value.personas.length + 1,
       theme: theme,
-      name: faker.person.firstName(),
+      name: faker.person.firstName(gender === 'Male'?'male':'female'),
       age: randomAge,
       gender: gender,
       avatar: avatar,

@@ -173,8 +173,8 @@ function YourTopic () {
     <>
     <NavigationBar />
     <Box textAlign="center" py={2} px={3}> 
-      <Box fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
-      <Box fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
+      <Box textAlign="center" fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
+      <Box textAlign="center" fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
       <Box sx={{backgroundColor: "#fff"}} px={5}>
         <Box display="flex" alignItems="center" gap={2} p={2}>
           <Box
@@ -218,7 +218,7 @@ function YourTopic () {
                 key={skill.id} 
                 >  
                 <Box fontSize={24} fontWeight={600} marginTop={3}>{skill.title}</Box>
-                <Box fontSize={14} fontWeight={300} height={100} marginTop={3} marginBottom={2}>{skill.desc}</Box>
+                <Box fontSize={18} fontWeight={300} height={100} marginTop={3} marginBottom={2} p={2}>{skill.desc}</Box>
                 <Box textAlign="left" flex={1} p={2}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -238,7 +238,8 @@ function YourTopic () {
                         sx: {
                           '& .MuiTooltip-tooltip': {
                             fontSize: '1.1rem', 
-                          }
+                          }, 
+                          width: '300px'
                         }
                       }}
                     >

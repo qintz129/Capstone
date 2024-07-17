@@ -15,7 +15,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; 
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@mui/icons-material/Edit'; 
+
 
 function Chat () {
   const [text, setText] = useState("");
