@@ -318,10 +318,13 @@ function Chat () {
                 >
                   <Box width={200}>
                     <Box p={1} sx={{borderBottom: "1px solid #e1e1e1"}}>
-                      <Button fullWidth variant="text" onClick={() => navigate("/saved-persona")}>Persona Library</Button>
+                      <Button fullWidth variant="text" onClick={() => navigate("/")}>Build Persona</Button>
                     </Box>
-                    <Box p={1}>
+                    <Box p={1} sx={{borderBottom: "1px solid #e1e1e1"}}>
                       <Button fullWidth variant="text" onClick={() => navigate("/interview-details/" + value.selectedPersona.id)}>Interview Details</Button>
+                    </Box>  
+                    <Box p={1}>
+                      <Button fullWidth variant="text" onClick={() => navigate("/saved-persona")}>Persona Library</Button>
                     </Box> 
                   </Box>
               </Popover> 

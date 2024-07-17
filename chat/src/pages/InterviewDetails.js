@@ -4,39 +4,81 @@ import { useContext, useState, useEffect } from 'react';
 import { ChatContext } from '../App';
 import backgroundImage from "../assets/images/bg.jpg"; 
 import TextField from '@mui/material/TextField'; 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
+import NavigationBar from './NavigationBar';
 
 
 function InterviewDetails () { 
   const navigate = useNavigate();
   const { id } = useParams()
 
-  const { value, setValue } = useContext(ChatContext); 
+  const { value, setValue } = useContext(ChatContext);  
+ 
    
-
-  // let allPersonas = value.summary.map(item => item.persona);
-  const allPersonas = [value.selectedPersona, ...value.favoritePersonas];
-  const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages;   
+  const filteredPersonas = value.summary.map(item => item.persona).filter(persona => persona.id !== value.selectedPersona.id);
+  const allPersonas = [value.selectedPersona, ...filteredPersonas];  
   const foundPersona = allPersonas.find(p => p.id === Number(id));  
-  const [matchedPersona, setMatchedPersona] = useState(foundPersona);
+  const [matchedPersona, setMatchedPersona] = useState(foundPersona); 
+  const matchedMessage = value.summary.find(item => item.persona.id === Number(id))?.messages;     
+  const matchedText = value.summary.find(item => item.persona.id === Number(id))?.interviewText;  
+  const [confirmed, setConfirmed] = useState(() => { 
+    if (value.summary.find(item => item.persona.id === Number(id))?.confirmed) {
+      return true;
+    } else { 
+      return false;
+    }
+  }
+);
+  const [text, setText] = useState(() => {
+    if (matchedText) {
+      return matchedText;
+    } 
+    else {
+      return matchedMessage ? matchedMessage.map(message => 
+        `${message.user === "persona" ? matchedPersona.name + ': ' : 'You: '}${message.content}`
+      ).join('\n\n') : '';
+    }
+  });
+  
+  
   const handleDesignGoalChange = (event) => {
     setMatchedPersona(prev => ({
       ...prev, 
       designGoal: event.target.value 
     }));
-  };
-  console.log("summary", value.summary);  
+  }; 
 
-  const handleEdit = () => { 
+  const handleConfirm = () => {
+    if (window.confirm("Do you want to confirm this interview? Once confirmed, you cannot edit it anymore.")) { 
+      setConfirmed(true);
+      setValue((prev) => ({
+        ...prev, 
+        selectedPersona: matchedPersona,
+        summary: prev.summary.map(item => 
+          item.persona.id === matchedPersona.id 
+            ? { ...item, persona: matchedPersona, interviewText: text, confirmed: true } 
+            : item 
+        )
+      }));  
+    }
+  }
+
+  const handleEdit = () => {  
+    if (window.confirm("Do you want to restart this interview? Once restarted, you cannot save the any changes in your interview script.")) {
     setValue((prev) => ({
       ...prev,
       selectedPersona: matchedPersona,
-      favoritePersonas: prev.favoritePersonas.filter(persona => persona.id !== matchedPersona.id)
+      // favoritePersonas: prev.favoritePersonas.filter(persona => persona.id !== matchedPersona.id)
     })); 
-    navigate("/your-topic");
-  }
+    navigate("/your-topic"); 
+      }
+  }  
+
+  console.log("matchedPersona",matchedPersona);   
+  console.log("selectedPersona",value.selectedPersona);
   return (
-    <Box> 
+    <Box>  
+      <NavigationBar />
      <Box display="flex" p={5} gap={5}>
       {
         matchedPersona && (
@@ -46,7 +88,7 @@ function InterviewDetails () {
               backgroundColor: '#fff',
               border: "10px solid #e1e1e1",
               borderRadius: 2,
-              p: 2
+              p: 2,  
             }}
           >
             <Box display="flex" justifyContent="center" my={2}>
@@ -84,7 +126,8 @@ function InterviewDetails () {
               size="small"  
               multiline  
               minRows={1}
-              maxRows={4}
+              maxRows={4} 
+              disabled={confirmed}
               InputProps={{
                 sx: {
                   fontWeight: 'bold', 
@@ -106,23 +149,40 @@ function InterviewDetails () {
           p={4}
         >
         <Box fontSize={18} fontWeight={700} mb={2}>Interview Summary</Box>
-        {
-          (matchedMessage && matchedMessage.length > 0) && (
-            matchedMessage.map((message, index) => (
-              <Box key={index} mb={2}>
-                {message.user === "persona" ? `${matchedPersona.name}: ` : ''}
-                <span style={{ fontWeight: message.user === "user" ? 'bold' : 'normal' }}>
-                    {message.content}
-                </span>
-              </Box>
-            ))
-          )
-        }
+        <TextField
+            fullWidth
+            multiline
+            rows={30}
+            variant="outlined"
+            defaultValue= {text}  
+            disabled={confirmed}
+            onChange = {(e) => setText(e.target.value)}
+          />
+            {/* {
+            (matchedMessage && matchedMessage.length > 0) && (
+              matchedMessage.map((message, index) => (
+                <Box key={index} mb={2}>
+                  <TextField
+                    fullWidth
+                    variant="outlined"
+                    label={message.user === "persona" ? `${matchedPersona.name}` : "You"}
+                    defaultValue={message.content}
+                    InputProps={{
+                      style: { fontWeight: message.user === "user" ? 'bold' : 'normal' } 
+                    }}  
+                    multiline={message.user === "persona"}
+                    rows={message.user === "persona" ? 5 : 1}
+                  />
+                </Box>
+              ))
+            )
+          } */}
         </Box>  
       </Box>
-      <Box justifyContent="center" mt={2} px={5} mb={3}>
-        <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={handleEdit}>Restart your interview</Button> 
-      </Box>
+      <Box justifyContent="center" display="flex" gap={10} mb={3}>
+        <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={handleEdit} disabled={confirmed}>Restart your interview</Button>  
+        <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained" onClick={handleConfirm} disabled={confirmed}>Confirm</Button>  
+      </Box> 
     </Box>
   )
 }

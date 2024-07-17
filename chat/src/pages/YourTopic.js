@@ -14,7 +14,8 @@ import FamilyImage from "../assets/images/family.jpg";
 import Tooltip from '@mui/material/Tooltip'; 
 import RemoveIcon from '@mui/icons-material/Remove'; 
 import 'swiper/css';
-import 'swiper/css/navigation';
+import 'swiper/css/navigation'; 
+import NavigationBar from './NavigationBar';
 
 
 function YourTopic () {
@@ -143,7 +144,6 @@ function YourTopic () {
 
 
   const handleNext = () => {
-    if (selectedSkills.length > 0) {
       setValue(prevValue => ({
         ...prevValue,
         selectedPersona: {
@@ -151,14 +151,15 @@ function YourTopic () {
           selectedSkills: selectedSkills
         }
       }));
-    }
     navigate("/chat");
   } 
 
-  console.log("skills", skills);
+  console.log("selected persona", value.selectedPersona);
 
-  return (
-    <Box textAlign="center" py={2} px={3}>
+  return (   
+    <>
+    <NavigationBar />
+    <Box textAlign="center" py={2} px={3}> 
       <Box fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
       <Box fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
       <Box sx={{backgroundColor: "#fff"}} px={5}>
@@ -297,18 +298,15 @@ function YourTopic () {
         <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={() => navigate(-1)}>Back</Button>
         <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained"  
             onClick={() => { 
-                if (selectedSkills.length > 0) {
                   if (window.confirm("Are you sure you want to select these abilities for inclusion in LLM interactions and proceed to the next step? This will enhance the relevance of future responses.")) {
                      handleNext();
                   } else {
                  console.log("Selection cancelled.");
                }  
-              } else { 
-                handleNext();
-              }
               }}>Next</Button>
       </Box>
-    </Box>
+    </Box> 
+    </>
   )
 }
 
