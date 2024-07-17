@@ -12,13 +12,16 @@ import EmploymentImage from "../assets/images/employment.jpg";
 import EducationImage from "../assets/images/education.jpg";
 import FamilyImage from "../assets/images/family.jpg"; 
 import Tooltip from '@mui/material/Tooltip'; 
-import RemoveIcon from '@mui/icons-material/Remove';
+import RemoveIcon from '@mui/icons-material/Remove'; 
+import 'swiper/css';
+import 'swiper/css/navigation'; 
+import NavigationBar from './NavigationBar';
 
 
 function YourTopic () {
   const navigate = useNavigate(); 
   const { value, setValue } = useContext(ChatContext); 
-  const [selectedSkills, setSelectedSkills] = useState(value.selectedSkills || [])
+  const [selectedSkills, setSelectedSkills] = useState(value.selectedPersona.selectedSkills || [])
  
 
   const skillsByTheme = {
@@ -153,22 +156,25 @@ function YourTopic () {
   }; 
 
 
-  const handleNext = () => { 
-    if (selectedSkills.length > 0) {
-      setValue({
-        ...value,
-        selectedSkills
-      })
-      navigate("/chat")
-    }
+  const handleNext = () => {
+      setValue(prevValue => ({
+        ...prevValue,
+        selectedPersona: {
+          ...prevValue.selectedPersona,
+          selectedSkills: selectedSkills
+        }
+      }));
+    navigate("/chat");
   } 
 
-  console.log(selectedSkills)
+  console.log("selected persona", value.selectedPersona);
 
-  return (
-    <Box textAlign="center" py={2} px={3}>
-      <Box fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
-      <Box fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
+  return (   
+    <>
+    <NavigationBar />
+    <Box textAlign="center" py={2} px={3}> 
+      <Box textAlign="center" fontSize={45} fontWeight={700}>Explore Key Abilities</Box>
+      <Box textAlign="center" fontSize={18} mt={5} mb={6}>Select and Learn About Key Abilities of Your Persona Based on the Theme</Box>
       <Box sx={{backgroundColor: "#fff"}} px={5}>
         <Box display="flex" alignItems="center" gap={2} p={2}>
           <Box
@@ -212,8 +218,8 @@ function YourTopic () {
                 key={skill.id} 
                 >  
                 <Box fontSize={24} fontWeight={600} marginTop={3}>{skill.title}</Box>
-                <Box fontSize={14} fontWeight={300} height={100} marginTop={3} marginBottom={2}>{skill.desc}</Box>
-                <Box textAlign="left" flex={1} p={2} pb={0}>
+                <Box fontSize={18} fontWeight={300} height={100} marginTop={3} marginBottom={2} p={2}>{skill.desc}</Box>
+                <Box textAlign="left" flex={1} p={2}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                   <Typography fontWeight={600}>Explore Ability Drivers and Ability Blockers</Typography>
@@ -232,7 +238,8 @@ function YourTopic () {
                         sx: {
                           '& .MuiTooltip-tooltip': {
                             fontSize: '1.1rem', 
-                          }
+                          }, 
+                          width: '300px'
                         }
                       }}
                     >
@@ -305,18 +312,15 @@ function YourTopic () {
         <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", height: 50, width: 250}} variant="outlined" onClick={() => navigate(-1)}>Back</Button>
         <Button sx={{backgroundColor: "#000", height: 50, width: 250}} variant="contained"  
             onClick={() => { 
-                if (selectedSkills.length > 0) {
                   if (window.confirm("Are you sure you want to select these abilities for inclusion in LLM interactions and proceed to the next step? This will enhance the relevance of future responses.")) {
                      handleNext();
                   } else {
                  console.log("Selection cancelled.");
                }  
-              } else { 
-                handleNext();
-              }
               }}>Next</Button>
       </Box>
-    </Box>
+    </Box> 
+    </>
   )
 }
 

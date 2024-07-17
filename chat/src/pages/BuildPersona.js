@@ -1,4 +1,4 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Box, FormControl, Select, MenuItem, TextField, Autocomplete, Button } from '@mui/material';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
@@ -10,33 +10,56 @@ import { ChatContext } from '../App';
 import { faker } from '@faker-js/faker';
 import { useNavigate } from "react-router-dom";
 import MaleAvatar from "../assets/images/avatar06.png";
-import FemaleAvatar from "../assets/images/avatar37.png";
+import FemaleAvatar from "../assets/images/avatar37.png"; 
+
 
 function BuildPersona () {
   const [age, setAge] = useState("")
   const [occupation, setOccupation] = useState("")
   const [medicalCondition, setMedicalCondition] = useState("")
-  const [theme, setTheme] = useState("") 
+  const [theme, setTheme] = useState("")  
+  const occupations = [
+    "Artist",  
+    "Athlete", 
+    "Baker",
+    "Business Owner",
+    "Customer Service", 
+    "Cooker",
+    "School Assistant",
+    "Shop Assistant",   
+    "Office Assistant",  
+    "Social Activist",
+    "Student",   
+    "Teacher", 
+  ]; 
 
   const { value, setValue } = useContext(ChatContext);
   const navigate = useNavigate();
 
-  const resetForm = () => {
-    setAge("")
-    setOccupation("")
-    setMedicalCondition("")
-    setTheme("")
-  }
+  // const resetForm = () => {
+  //   setAge("")
+  //   setOccupation("")
+  //   setMedicalCondition("")
+  //   setTheme("")
+  // }
 
   const selectPersona = (persona) => {
+    const isNewFavorite = value.favoritePersonas.every(p => p.id !== persona.id);
+    const isInSummary = value.summary.some(item => item.persona.id === persona.id);
+  
     setValue({
       ...value,
-      selectedPersona: persona
-    })
-    navigate("/your-topic")
+      selectedPersona: persona,
+      favoritePersonas: isNewFavorite ? [...value.favoritePersonas, persona] : value.favoritePersonas,
+      summary: isInSummary ? value.summary.filter(item => item.persona.id !== persona.id) : value.summary
+    }); 
   }
 
-  const createPersona = () => {
+  const createPersona = () => {  
+    if (!age || !occupation || !medicalCondition || !theme) { 
+      window.alert("Please fill in age, medicalCondition and theme to create a persona."); 
+      return; 
+    }
     const gender = faker.helpers.arrayElement(['Female', 'Male']); 
     const avatar = gender === 'Male' ? MaleAvatar : FemaleAvatar; 
     const ageRange = age.split('-');
@@ -47,13 +70,14 @@ function BuildPersona () {
     const newPersona = {
       id: value.personas.length + 1,
       theme: theme,
-      name: faker.person.firstName(),
+      name: faker.person.firstName(gender === 'Male'?'male':'female'),
       age: randomAge,
       gender: gender,
       avatar: avatar,
       occupation: occupation,
       diagnosis: medicalCondition,
-      desc: faker.lorem.lines(10)
+      desc: faker.lorem.lines(10), 
+      chats:[]
     };
     
     setValue({
@@ -62,9 +86,13 @@ function BuildPersona () {
     });   
   }
 
-  const favoritePersona = (persona) => {
+  const favoritePersona = (persona) => { 
     let favoritePersonas = []
-    if (value.favoritePersonas.find(p => p.id === persona.id)) {
+    if (value.favoritePersonas.find(p => p.id === persona.id)) { 
+      if (persona.id === value.selectedPersona?.id) {  
+        window.alert("You cannot unfavorite the selected persona."); 
+        return;
+      }
       favoritePersonas = value.favoritePersonas.filter(p => p.id !== persona.id)
     } else {
       favoritePersonas = [...value.favoritePersonas, persona]
@@ -73,13 +101,32 @@ function BuildPersona () {
       ...value,
       favoritePersonas
     })
+  }  
+
+  const toggleSelectPersona = (persona) => { 
+    if (value.selectedPersona && value.selectedPersona.id === persona.id) { 
+      setValue({
+        ...value,
+        selectedPersona: null
+      })
+    } else {  
+      window.confirm("Are you sure you want to select this persona?") && selectPersona(persona)
+    } 
+  } 
+
+  const handleNext = () => { 
+    if (!value.selectedPersona) { 
+      window.alert("Please select a persona before proceeding to the next step.")
+      return;
+    }
+    navigate("/your-topic");
   }
 
-  return (
-    <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10} mb={5}>
-      <Box flex={1}>
+  return ( 
+    <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10} mb={5}> 
+      <Box flex={1}> 
         <h2 style={{fontSize: 40}}>Build Your Persona</h2>
-        <p>Fill in the details to create your personalized persona</p>
+        <p>Fill in the details to create your personalized persona</p> 
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Age</Box>
           <FormControl fullWidth size="small">
@@ -95,21 +142,25 @@ function BuildPersona () {
           </FormControl>
         </Box>
         <Box mb={3}>
-          <Box mb={1} fontWeight={500}>Occupation</Box>
-          <FormControl fullWidth size="small">
-            <Select
-              value={occupation}
-              onChange={e => setOccupation(e.target.value)}
-              sx={{backgroundColor: "white"}}
-            >
-              <MenuItem value="Student">Student</MenuItem>
-              <MenuItem value="Artist">Artist</MenuItem>
-              <MenuItem value="Barista">Barista</MenuItem>
-              <MenuItem value="School Assistant">School Assistant</MenuItem>
-              <MenuItem value="Shop Assistant">Shop Assistant</MenuItem> 
-            </Select>
-          </FormControl>
-        </Box>
+        <Box mb={1} fontWeight={500}>Occupation</Box>
+        <FormControl fullWidth size="small">
+          <Autocomplete
+            freeSolo
+            value={occupation}
+            onChange={(event, newValue) => setOccupation(newValue)}
+            onInputChange={(event, newInputValue) => setOccupation(newInputValue)}
+            options={occupations}
+            renderInput={(params) => (
+              <TextField 
+                {...params}
+                sx={{ backgroundColor: "white" }}
+                variant="outlined"
+                size="small"
+              />
+            )}
+          />
+        </FormControl>
+    </Box>
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Medical Condition</Box>
           <Select
@@ -137,11 +188,21 @@ function BuildPersona () {
           </Select>
         </Box>
         <Box display="flex" gap={10}>
-          <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF"}} variant="outlined" onClick={resetForm}>Reset Form</Button>
-          <Button sx={{backgroundColor: "#000"}} variant="contained" onClick={createPersona}>Create Persona</Button>
+          {/* <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF"}} variant="outlined" onClick={resetForm}>Reset Form</Button> */}
+          <Button sx={{backgroundColor: "#000"}} variant="contained" onClick={createPersona}>Create Persona</Button> 
+          <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", width:'150px'}} variant="outlined" onClick={handleNext}>Next</Button>
         </Box>
       </Box>
-      <Box flex={1} overflow="hidden" sx={{overflowY: 'auto',maxHeight: '85vh'}}>
+      <Box flex={1} overflow="hidden"  
+          sx={{
+            overflowY: 'auto', 
+            maxHeight: '85vh',
+            '::-webkit-scrollbar': {
+              display: 'none'
+            },
+            scrollbarWidth: 'none'
+          }}
+        > 
       {value.personas.length!=0 ? (<Swiper
           effect={'cards'}
           grabCursor={true}
@@ -189,14 +250,10 @@ function BuildPersona () {
                     </Box>
                 </Box>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mt={2}>
-                <Button color="secondary" onClick={() => {
-                  if (window.confirm("Are you sure you want to select this persona and proceed to the next step?")) {
-                     selectPersona(persona);
-                  } else {
-                 console.log("Selection cancelled.");
-               }
-                }}>
-                  SELECT
+                <Button color="secondary"  
+                        onClick={() => toggleSelectPersona(persona)}  
+                 >
+                  {value.selectedPersona && value.selectedPersona.id === persona.id ? 'UNSELECT' : 'SELECT'}
                 </Button>
                   <FavoriteIcon onClick={() => favoritePersona(persona)} sx={{color: value.favoritePersonas.find(p => p.id === persona.id) ? "red" : "black"}} />
                 </Box>
@@ -211,7 +268,7 @@ function BuildPersona () {
           </Box>
           )}
       </Box>
-    </Box>
+    </Box> 
   )
 }
 
