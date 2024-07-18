@@ -34,7 +34,8 @@ function Chat () {
                       "4. Question 4",  
                       "5. Question 5", 
                       "6. Question 6",  
-                      "7. Question 7"];
+                      "7. Question 7"]; 
+
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -193,7 +194,7 @@ function Chat () {
           if (index === existingIndex) {
             return {
               ...item,
-              messages: marked ? prevValue.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
+              messages: marked ? prevValue.selectedPersona.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
             };
           }
           return item;
@@ -204,7 +205,7 @@ function Chat () {
           {
             id: prevValue.summary ? prevValue.summary.length + 1 : 1,
             persona: prevValue.selectedPersona,
-            messages: marked ? prevValue.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
+            messages: marked ? prevValue.selectedPersona.markedQuestions : prevValue.currentChat.messages.filter(message => message.user !== "pre-defined")
           }
         ];
       }
@@ -220,34 +221,45 @@ function Chat () {
   
   const markQuestion = (question) => {
     setValue(prevValue => {
-      if (!prevValue.markedQuestions.find(mq => mq.datetime === question.datetime)) {
+      // Access markedQuestions inside selectedPersona
+      if (!prevValue.selectedPersona.markedQuestions?.find(mq => mq.datetime === question.datetime)) {
         return {
           ...prevValue,
-          markedQuestions: [...prevValue.markedQuestions, question]
+          selectedPersona: {
+            ...prevValue.selectedPersona,
+            markedQuestions: [...prevValue.selectedPersona.markedQuestions, question] // Update the nested markedQuestions
+          }
         };
       }
-      return prevValue;  
-    });  
-
+      return prevValue;
+    });
+  
     setValue(prevValue => {
       const messageIndex = prevValue.currentChat.messages.findIndex(m => m.datetime === question.datetime);
       if (messageIndex !== -1 && messageIndex + 1 < prevValue.currentChat.messages.length) {
         const answer = prevValue.currentChat.messages[messageIndex + 1];
-        if (!prevValue.markedQuestions.find(mq => mq.datetime === answer.datetime)) {
+        // Access markedQuestions inside selectedPersona
+        if (!prevValue.selectedPersona.markedQuestions?.find(mq => mq.datetime === answer.datetime)) {
           return {
             ...prevValue,
-            markedQuestions: [...prevValue.markedQuestions, answer]
+            selectedPersona: {
+              ...prevValue.selectedPersona,
+              markedQuestions: [...prevValue.selectedPersona.markedQuestions, answer] // Update the nested markedQuestions
+            }
           };
         }
       }
-      return prevValue; 
+      return prevValue;
     });
-  } 
+  }
 
   const handleDeleteQuestion = (index) => {
     setValue(prevValue => ({
       ...prevValue,
-      markedQuestions: prevValue.markedQuestions.filter((_, i) => i !== index && i !== index + 1)
+      selectedPersona: {
+        ...prevValue.selectedPersona,
+        markedQuestions: prevValue.selectedPersona.markedQuestions.filter((_, i) => i !== index && i !== index + 1)
+      }
     }));
   }
   
@@ -527,7 +539,7 @@ function Chat () {
             <Box mb={2} mt={2} sx={{color: "#39462c", fontSize: 25, fontWeight: 700}}>Marked Questions</Box>
             <Box display="flex" flexDirection="column" gap={1} sx={{borderColor: "#d5e1bf", borderStyle: "solid", borderWidth: "1px 0", fontWeight: 500, color: "#1b2559"}} py={1}>
   {
-    value.markedQuestions
+    (value.selectedPersona.markedQuestions)
       .filter(question => question.user === 'user')
       .map((question, index) => (
         <Box key={index} sx={{ display: 'flex', alignItems: 'center'}}> 

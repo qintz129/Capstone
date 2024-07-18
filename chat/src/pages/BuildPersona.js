@@ -77,7 +77,8 @@ function BuildPersona () {
       occupation: occupation,
       diagnosis: medicalCondition,
       desc: faker.lorem.lines(10), 
-      chats:[]
+      chats:[], 
+      markedQuestions:[]
     };
     
     setValue({
@@ -123,7 +124,8 @@ function BuildPersona () {
   }
 
   return ( 
-    <Box display="flex" alignItems="center" py={3} px={10} height="100vh" boxSizing="border-box" gap={10} mb={5}> 
+    <Box>  
+     <Box display="flex" alignItems="center" py={3} px={10} maxHeight="85vh" boxSizing="border-box" gap={10}>
       <Box flex={1}> 
         <h2 style={{fontSize: 40}}>Build Your Persona</h2>
         <p>Fill in the details to create your personalized persona</p> 
@@ -162,35 +164,30 @@ function BuildPersona () {
         </FormControl>
     </Box>
         <Box mb={3}>
-          <Box mb={1} fontWeight={500}>Medical Condition</Box>
-          <Select
-            fullWidth
-            size="small"
-            value={medicalCondition}
-            onChange={e => setMedicalCondition(e.target.value)}
-            sx={{backgroundColor: "white"}}
-          >
-            <MenuItem value="Down Syndrome">Down Syndrome</MenuItem>
-          </Select>
+          <Box mb={1} fontWeight={500}>Medical Condition</Box> 
+          <FormControl fullWidth size="small">
+            <Select
+              value={medicalCondition}
+              onChange={e => setMedicalCondition(e.target.value)}
+              sx={{backgroundColor: "white"}}
+            >
+              <MenuItem value="Down Syndrome">Down Syndrome</MenuItem>
+            </Select> 
+          </FormControl>
         </Box>
         <Box mb={5}>
-          <Box mb={1} fontWeight={500}>Theme</Box>
-          <Select
-            fullWidth
-            size="small"
-            value={theme}
-            onChange={e => setTheme(e.target.value)}
-            sx={{backgroundColor: "white"}}
-          >
-            <MenuItem value="Employment">Employment</MenuItem>
-            <MenuItem value="Education">Education</MenuItem>
-            <MenuItem value="Family">Family</MenuItem>
-          </Select>
-        </Box>
-        <Box display="flex" gap={10}>
-          {/* <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF"}} variant="outlined" onClick={resetForm}>Reset Form</Button> */}
-          <Button sx={{backgroundColor: "#000"}} variant="contained" onClick={createPersona}>Create Persona</Button> 
-          <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", width:'150px'}} variant="outlined" onClick={handleNext}>Next</Button>
+          <Box mb={1} fontWeight={500}>Theme</Box> 
+          <FormControl fullWidth size="small">
+            <Select
+              value={theme}
+              onChange={e => setTheme(e.target.value)}
+              sx={{backgroundColor: "white"}}
+            >
+              <MenuItem value="Employment">Employment</MenuItem>
+              <MenuItem value="Education">Education</MenuItem>
+              <MenuItem value="Family">Family</MenuItem>
+            </Select> 
+          </FormControl>
         </Box>
       </Box>
       <Box flex={1} overflow="hidden"  
@@ -267,7 +264,12 @@ function BuildPersona () {
             <p>Create your persona to begin the journey!</p>
           </Box>
           )}
+      </Box>  
       </Box>
+        <Box display="flex" alignItems="center" justifyContent="center" py={3} px={10} gap={70}>
+          <Button sx={{backgroundColor: "#000", width:'200px'}} variant="contained" onClick={createPersona}>Create Persona</Button> 
+          <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", width:'200px'}} variant="outlined" onClick={handleNext}>Next</Button>
+        </Box>
     </Box> 
   )
 }

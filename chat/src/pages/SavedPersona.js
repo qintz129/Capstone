@@ -43,7 +43,7 @@ function SavedPersona () {
                     <Box>Diagnosis: {persona.diagnosis}</Box>
                     <Box mt={3}>{persona.desc}</Box>
                   </Box>
-                  <Box mt={2} display="flex" justifyContent="center">
+                  <Box mt={5} display="flex" justifyContent="center">
                     <Button variant="contained" color="secondary" onClick={() => navigate("/interview-details/" + persona.id)}>
                       View Details
                     </Button>

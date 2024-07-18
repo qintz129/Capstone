@@ -39,8 +39,6 @@ function App() {
   const [value, setValue] = useState({
     personas: [],
     favoritePersonas: [],
-    markedQuestions: [],  
-    designGoal: "",
     summary:[]
   })
 
