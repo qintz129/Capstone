@@ -218,7 +218,7 @@ function YourTopic () {
                 key={skill.id} 
                 >  
                 <Box fontSize={24} fontWeight={600} marginTop={3}>{skill.title}</Box>
-                <Box fontSize={18} fontWeight={300} height={100} marginTop={3} marginBottom={2} p={2}>{skill.desc}</Box>
+                <Box fontSize={18} fontWeight={300} height={100} marginTop={3} marginBottom={2} p={2} overflow="auto">{skill.desc}</Box>
                 <Box textAlign="left" flex={1} p={2}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>

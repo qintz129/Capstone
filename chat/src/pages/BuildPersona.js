@@ -266,9 +266,9 @@ function BuildPersona () {
           )}
       </Box>  
       </Box>
-        <Box display="flex" alignItems="center" justifyContent="center" py={3} px={10} gap={70}>
+        <Box display="flex" alignItems="center" justifyContent="center" py={3} px={10} gap={60}>
           <Button sx={{backgroundColor: "#000", width:'200px'}} variant="contained" onClick={createPersona}>Create Persona</Button> 
-          <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", width:'200px'}} variant="outlined" onClick={handleNext}>Next</Button>
+          {value.personas.length>0 && <Button sx={{borderColor: "#000", color: "#000", backgroundColor: "#FFF", width:'200px'}} variant="outlined" onClick={handleNext}>Next</Button>}
         </Box>
     </Box> 
   )
