@@ -79,7 +79,7 @@ function InterviewDetails () {
   return (
     <Box>  
       <NavigationBar />
-     <Box display="flex" p={5} gap={5}>
+     <Box display="flex" p={5} gap={3}>
       {
         matchedPersona && (
           <Box
@@ -146,7 +146,7 @@ function InterviewDetails () {
             backgroundImage: `url('${backgroundImage}')`,
             backgroundSize: "cover"
           }}
-          p={4}
+          p={2}
         >
         <Box fontSize={18} fontWeight={700} mb={2}>Interview Summary</Box>
         <TextField
