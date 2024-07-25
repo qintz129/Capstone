@@ -222,7 +222,7 @@ function YourTopic () {
                 <Box textAlign="left" flex={1} p={2}>
                 <Accordion>
                 <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                  <Typography fontWeight={600}>Explore Ability Drivers and Ability Blockers</Typography>
+                  <Typography fontWeight={600}>Explore Ability Drivers and Blockers</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
                 <Box bgcolor="white" p={2} borderRadius={2} height={200} overflow="auto">

@@ -64,7 +64,7 @@ function InterviewDetails () {
   }
 
   const handleEdit = () => {  
-    if (window.confirm("Do you want to restart this interview? Once restarted, you cannot save the any changes in your interview script.")) {
+    if (window.confirm("Do you want to restart this interview? Once restarted, you will lose changes you made in your interview script.")) {
     setValue((prev) => ({
       ...prev,
       selectedPersona: matchedPersona,
@@ -148,7 +148,7 @@ function InterviewDetails () {
           }}
           p={2}
         >
-        <Box fontSize={18} fontWeight={700} mb={2}>Interview Summary</Box>
+        <Box fontSize={18} fontWeight={700} mb={2}>Interview Script</Box>
         <TextField
             fullWidth
             multiline

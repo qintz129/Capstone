@@ -127,7 +127,7 @@ function BuildPersona () {
     <Box>  
      <Box display="flex" alignItems="center" py={3} px={10} maxHeight="85vh" boxSizing="border-box" gap={10}>
       <Box flex={1}> 
-        <h2 style={{fontSize: 40}}>Build Your Persona</h2>
+        <h2 style={{fontSize: 30}}>Build Sensitive Group Personas</h2>
         <p>Fill in the details to create your personalized persona</p> 
         <Box mb={3}>
           <Box mb={1} fontWeight={500}>Age</Box>
