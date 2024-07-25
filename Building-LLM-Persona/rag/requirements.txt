@@ -1,0 +1,9 @@
+pypdf
+langchain
+chromadb # Vector storage
+pytest
+boto3
+torch
+transformers
+bert-score
+
