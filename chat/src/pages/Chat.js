@@ -257,7 +257,8 @@ function Chat () {
     setValue(prevValue => ({
       ...prevValue,
       selectedPersona: {
-        ...prevValue.selectedPersona,
+        ...prevValue.selectedPersona, 
+        // (_, i) means the filter relies on the index of the array but not the value itself
         markedQuestions: prevValue.selectedPersona.markedQuestions.filter((_, i) => i !== index && i !== index + 1)
       }
     }));
